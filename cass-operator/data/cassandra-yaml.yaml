@@ -1,0 +1,1722 @@
+- default_value: '''Test Cluster'''
+  description: 'The name of the cluster. This is mainly used to prevent machines inone
+    logical cluster from joining another.Default Value: ''Test Cluster'''
+  name: cluster_name
+- default_value: '16'
+  description: "This defines the number of tokens randomly assigned to this node on\
+    \ the ringThe more tokens, relative to other nodes, the larger the proportion\
+    \ of datathat this node will store. You probably want all nodes to have the same\
+    \ numberof tokens assuming they have equal hardware capability.If you leave this\
+    \ unspecified, Cassandra will use the default of 1 token for legacy compatibility,and\
+    \ will use the initial_token as described below.Specifying initial_token will\
+    \ override this setting on the node\u2019s initial start,on subsequent starts,\
+    \ this setting will apply even if initial token is set.See cassandra.apache.org/doc/latest/getting_started/production.html#tokens\
+    \ forbest practice information about num_tokens.Default Value: 16"
+  name: num_tokens
+- default_value: KEYSPACE
+  description: 'This option is commented out by default.Triggers automatic allocation
+    of num_tokens tokens for this node. The allocationalgorithm attempts to choose
+    tokens in a way that optimizes replicated load overthe nodes in the datacenter
+    for the replica factor.The load assigned to each node will be close to proportional
+    to its number ofvnodes.Only supported with the Murmur3Partitioner.Replica factor
+    is determined via the replication strategy used by the specifiedkeyspace.Default
+    Value: KEYSPACE'
+  name: allocate_tokens_for_keyspace
+- default_value: '3'
+  description: 'Replica factor is explicitly set, regardless of keyspace or datacenter.This
+    is the replica factor within the datacenter, like NTS.Default Value: 3'
+  name: allocate_tokens_for_local_replication_factor
+- default_value: <UNKNOWN>
+  description: "This option is commented out by default.initial_token allows you to\
+    \ specify tokens manually.  While you can use it withvnodes (num_tokens > 1, above)\u2009\
+    \u2014\u2009in which case you should provide acomma-separated list\u2009\u2014\
+    \u2009it\u2019s primarily used when adding nodes to legacy clustersthat do not\
+    \ have vnodes enabled."
+  name: initial_token
+- default_value: 'true'
+  description: 'May either be "true" or "false" to enable globallyDefault Value: true'
+  name: hinted_handoff_enabled
+- default_value: <UNKNOWN>
+  description: 'This option is commented out by default.When hinted_handoff_enabled
+    is true, a black list of data centers that will notperform hinted handoffDefault
+    Value (complex option):    #    - DC1    #    - DC2'
+  name: hinted_handoff_disabled_datacenters
+- default_value: 3h
+  description: 'this defines the maximum amount of time a dead host will have hintsgenerated.  After
+    it has been dead this long, new hints for it will not becreated until it has been
+    seen alive and gone down again.Min unit: msDefault Value: 3h'
+  name: max_hint_window
+- default_value: 1024KiB
+  description: 'Maximum throttle in KiBs per second, per delivery thread.  This will
+    bereduced proportionally to the number of nodes in the cluster.  (If thereare
+    two nodes in the cluster, each delivery thread will use the maximumrate; if there
+    are three, each will throttle to half of the maximum,since we expect two nodes
+    to be delivering hints simultaneously.)Min unit: KiBDefault Value: 1024KiB'
+  name: hinted_handoff_throttle
+- default_value: '2'
+  description: 'Number of threads with which to deliver hints;Consider increasing
+    this number when you have multi-dc deployments, sincecross-dc handoff tends to
+    be slowerDefault Value: 2'
+  name: max_hints_delivery_threads
+- default_value: ' /var/lib/cassandra/hints'
+  description: 'This option is commented out by default.Directory where Cassandra
+    should store hints.If not set, the default directory is $CASSANDRA_HOME/data/hints.Default
+    Value:  /var/lib/cassandra/hints'
+  name: hints_directory
+- default_value: 10000ms
+  description: 'How often hints should be flushed from the internal buffers to disk.Will
+    not trigger fsync.Min unit: msDefault Value: 10000ms'
+  name: hints_flush_period
+- default_value: 128MiB
+  description: 'Maximum size for a single hints file, in mebibytes.Min unit: MiBDefault
+    Value: 128MiB'
+  name: max_hints_file_size
+- default_value: 0MiB
+  description: 'This option is commented out by default.The file size limit to store
+    hints for an unreachable host, in mebibytes.Once the local hints files have reached
+    the limit, no more new hints will be created.Set a non-positive value will disable
+    the size limit.Default Value: 0MiB'
+  name: max_hints_size_per_host
+- default_value: 'false'
+  description: 'Enable / disable automatic cleanup for the expired and orphaned hints
+    file.Disable the option in order to preserve those hints on the disk.Default Value:
+    false'
+  name: auto_hints_cleanup_enabled
+- default_value: 'true'
+  description: 'This option is commented out by default.Enable/disable transfering
+    hints to a peer during decommission. Even when enabled, this does not guaranteeconsistency
+    for logged batches, and it may delay decommission when coupled with a strict hinted_handoff_throttle.Default:
+    trueDefault Value: true'
+  name: transfer_hints_on_decommission
+- default_value: <UNKNOWN>
+  description: 'This option is commented out by default.Compression to apply to the
+    hint files. If omitted, hints fileswill be written uncompressed. LZ4, Snappy,
+    and Deflate compressorsare supported.Default Value (complex option):    #   -
+    class_name: LZ4Compressor    #     parameters:    #         -'
+  name: hints_compression
+- default_value: 'true'
+  description: 'This option is commented out by default.Enable / disable persistent
+    hint windows.If set to false, a hint will be stored only in case a respective
+    nodethat hint is for is down less than or equal to max_hint_window.If set to true,
+    a hint will be stored in case there is not anyhint which was stored earlier than
+    max_hint_window. This is for caseswhen a node keeps to restart and hints are not
+    delivered yet, we would be savinghints for that node indefinitely.Defaults to
+    true.Default Value: true'
+  name: hint_window_persistent_enabled
+- default_value: 1024KiB
+  description: 'Maximum throttle in KiBs per second, total. This will bereduced proportionally
+    to the number of nodes in the cluster.Min unit: KiBDefault Value: 1024KiB'
+  name: batchlog_replay_throttle
+- default_value: AllowAllAuthenticator
+  description: 'Authentication backend, implementing IAuthenticator; used to identify
+    usersOut of the box, Cassandra provides org.apache.cassandra.auth.{AllowAllAuthenticator,PasswordAuthenticator}.AllowAllAuthenticator
+    performs no checks - set it to disable authentication.PasswordAuthenticator relies
+    on username/password pairs to authenticateusers. It keeps usernames and hashed
+    passwords in system_auth.roles table.Please increase system_auth keyspace replication
+    factor if you use this authenticator.If using PasswordAuthenticator, CassandraRoleManager
+    must also be used (see below)Default Value: AllowAllAuthenticator'
+  name: authenticator
+- default_value: AllowAllAuthorizer
+  description: 'Authorization backend, implementing IAuthorizer; used to limit access/provide
+    permissionsOut of the box, Cassandra provides org.apache.cassandra.auth.{AllowAllAuthorizer,CassandraAuthorizer}.AllowAllAuthorizer
+    allows any action to any user - set it to disable authorization.CassandraAuthorizer
+    stores permissions in system_auth.role_permissions table. Pleaseincrease system_auth
+    keyspace replication factor if you use this authorizer.Default Value: AllowAllAuthorizer'
+  name: authorizer
+- default_value: CassandraRoleManager
+  description: 'Part of the Authentication & Authorization backend, implementing IRoleManager;
+    usedto maintain grants and memberships between roles.Out of the box, Cassandra
+    provides org.apache.cassandra.auth.CassandraRoleManager,which stores role information
+    in the system_auth keyspace. Most functions of theIRoleManager require an authenticated
+    login, so unless the configured IAuthenticatoractually implements authentication,
+    most of this functionality will be unavailable.CassandraRoleManager stores role
+    data in the system_auth keyspace. Pleaseincrease system_auth keyspace replication
+    factor if you use this role manager.Default Value: CassandraRoleManager'
+  name: role_manager
+- default_value: AllowAllNetworkAuthorizer
+  description: 'Network authorization backend, implementing INetworkAuthorizer; used
+    to restrict useraccess to certain DCsOut of the box, Cassandra provides org.apache.cassandra.auth.{AllowAllNetworkAuthorizer,CassandraNetworkAuthorizer}.AllowAllNetworkAuthorizer
+    allows access to any DC to any user - set it to disable authorization.CassandraNetworkAuthorizer
+    stores permissions in system_auth.network_permissions table. Pleaseincrease system_auth
+    keyspace replication factor if you use this authorizer.Default Value: AllowAllNetworkAuthorizer'
+  name: network_authorizer
+- default_value: 'false'
+  description: "This option is commented out by default.Depending on the auth strategy\
+    \ of the cluster, it can be beneficial to iteratefrom root to table (root \u2192\
+    \ ks \u2192 table) instead of table to root (table \u2192 ks \u2192 root).As the\
+    \ auth entries are whitelisting, once a permission is found you know it to bevalid.\
+    \ We default to false as the legacy behavior is to query at the table level thenmove\
+    \ back up to the root. See CASSANDRA-17016 for details.Default Value: false"
+  name: traverse_auth_from_root
+- default_value: 2000ms
+  description: 'Validity period for roles cache (fetching granted roles can be an
+    expensiveoperation depending on the role manager, CassandraRoleManager is one
+    example)Granted roles are cached for authenticated sessions in AuthenticatedUser
+    andafter the period specified here, become eligible for (async) reload.Defaults
+    to 2000, set to 0 to disable caching entirely.Will be disabled automatically for
+    AllowAllAuthenticator.For a long-running cache using roles_cache_active_update,
+    considersetting to something longer such as a daily validation: 86400000Min unit:
+    msDefault Value: 2000ms'
+  name: roles_validity
+- default_value: 2000ms
+  description: 'This option is commented out by default.Refresh interval for roles
+    cache (if enabled).After this interval, cache entries become eligible for refresh.
+    Upon nextaccess, an async reload is scheduled and the old value returned until
+    itcompletes. If roles_validity is non-zero, then this must bealso.This setting
+    is also used to inform the interval of auto-updating ifusing roles_cache_active_update.Defaults
+    to the same value as roles_validity.For a long-running cache, consider setting
+    this to 60000 (1 hour) etc.Min unit: msDefault Value: 2000ms'
+  name: roles_update_interval
+- default_value: 'false'
+  description: 'This option is commented out by default.If true, cache contents are
+    actively updated by a background task at theinterval set by roles_update_interval.
+    If false, cache entriesbecome eligible for refresh after their update interval.
+    Upon next access,an async reload is scheduled and the old value returned until
+    it completes.Default Value: false'
+  name: roles_cache_active_update
+- default_value: 2000ms
+  description: 'Validity period for permissions cache (fetching permissions can be
+    anexpensive operation depending on the authorizer, CassandraAuthorizer isone example).
+    Defaults to 2000, set to 0 to disable.Will be disabled automatically for AllowAllAuthorizer.For
+    a long-running cache using permissions_cache_active_update, considersetting to
+    something longer such as a daily validation: 86400000msMin unit: msDefault Value:
+    2000ms'
+  name: permissions_validity
+- default_value: 2000ms
+  description: 'This option is commented out by default.Refresh interval for permissions
+    cache (if enabled).After this interval, cache entries become eligible for refresh.
+    Upon nextaccess, an async reload is scheduled and the old value returned until
+    itcompletes. If permissions_validity is non-zero, then this must bealso.This setting
+    is also used to inform the interval of auto-updating ifusing permissions_cache_active_update.Defaults
+    to the same value as permissions_validity.For a longer-running permissions cache,
+    consider setting to update hourly (60000)Min unit: msDefault Value: 2000ms'
+  name: permissions_update_interval
+- default_value: 'false'
+  description: 'This option is commented out by default.If true, cache contents are
+    actively updated by a background task at theinterval set by permissions_update_interval.
+    If false, cache entriesbecome eligible for refresh after their update interval.
+    Upon next access,an async reload is scheduled and the old value returned until
+    it completes.Default Value: false'
+  name: permissions_cache_active_update
+- default_value: 2000ms
+  description: 'Validity period for credentials cache. This cache is tightly coupled
+    tothe provided PasswordAuthenticator implementation of IAuthenticator. Ifanother
+    IAuthenticator implementation is configured, this cache will notbe automatically
+    used and so the following settings will have no effect.Please note, credentials
+    are cached in their encrypted form, so whileactivating this cache may reduce the
+    number of queries made to theunderlying table, it may not  bring a significant
+    reduction in thelatency of individual authentication attempts.Defaults to 2000,
+    set to 0 to disable credentials caching.For a long-running cache using credentials_cache_active_update,
+    considersetting to something longer such as a daily validation: 86400000Min unit:
+    msDefault Value: 2000ms'
+  name: credentials_validity
+- default_value: 2000ms
+  description: 'This option is commented out by default.Refresh interval for credentials
+    cache (if enabled).After this interval, cache entries become eligible for refresh.
+    Upon nextaccess, an async reload is scheduled and the old value returned until
+    itcompletes. If credentials_validity is non-zero, then this must bealso.This setting
+    is also used to inform the interval of auto-updating ifusing credentials_cache_active_update.Defaults
+    to the same value as credentials_validity.For a longer-running permissions cache,
+    consider setting to update hourly (60000)Min unit: msDefault Value: 2000ms'
+  name: credentials_update_interval
+- default_value: 'false'
+  description: 'This option is commented out by default.If true, cache contents are
+    actively updated by a background task at theinterval set by credentials_update_interval.
+    If false (default), cache entriesbecome eligible for refresh after their update
+    interval. Upon next access,an async reload is scheduled and the old value returned
+    until it completes.Default Value: false'
+  name: credentials_cache_active_update
+- default_value: org.apache.cassandra.dht.Murmur3Partitioner
+  description: 'The partitioner is responsible for distributing groups of rows (bypartition
+    key) across nodes in the cluster. The partitioner can NOT bechanged without reloading
+    all data.  If you are adding nodes or upgrading,you should set this to the same
+    partitioner that you are currently using.The default partitioner is the Murmur3Partitioner.
+    Older partitionerssuch as the RandomPartitioner, ByteOrderedPartitioner, andOrderPreservingPartitioner
+    have been included for backward compatibility only.For new clusters, you should
+    NOT change this value.Default Value: org.apache.cassandra.dht.Murmur3Partitioner'
+  name: partitioner
+- default_value: <UNKNOWN>
+  description: 'This option is commented out by default.Directories where Cassandra
+    should store data on disk. If multipledirectories are specified, Cassandra will
+    spread data evenly acrossthem by partitioning the token ranges.If not set, the
+    default directory is $CASSANDRA_HOME/data/data.Default Value (complex option):    #     -
+    /var/lib/cassandra/data'
+  name: data_file_directories
+- default_value: <UNKNOWN>
+  description: This option is commented out by default.Directory were Cassandra should
+    store the data of the local system keyspaces.By default Cassandra will store the
+    data of the local system keyspaces in the first of the data directories specifiedby
+    data_file_directories.This approach ensures that if one of the other disks is
+    lost Cassandra can continue to operate. For extra securitythis setting allows
+    to store those data on a different directory that provides redundancy.
+  name: local_system_data_file_directory
+- default_value: ' /var/lib/cassandra/commitlog'
+  description: 'This option is commented out by default.commit log.  when running
+    on magnetic HDD, this should be aseparate spindle than the data directories.If
+    not set, the default directory is $CASSANDRA_HOME/data/commitlog.Default Value:  /var/lib/cassandra/commitlog'
+  name: commitlog_directory
+- default_value: 'false'
+  description: 'Enable / disable CDC functionality on a per-node basis. This modifies
+    the logic usedfor write path allocation rejection (standard: never reject. cdc:
+    reject Mutationcontaining a CDC-enabled table if at space limit in cdc_raw_directory).Default
+    Value: false'
+  name: cdc_enabled
+- default_value: ' /var/lib/cassandra/cdc_raw'
+  description: 'This option is commented out by default.CommitLogSegments are moved
+    to this directory on flush if cdc_enabled: true and thesegment contains mutations
+    for a CDC-enabled table. This should be placed on aseparate spindle than the data
+    directories. If not set, the default directory is$CASSANDRA_HOME/data/cdc_raw.Default
+    Value:  /var/lib/cassandra/cdc_raw'
+  name: cdc_raw_directory
+- default_value: stop
+  description: 'Policy for data disk failures:die  shut down gossip and client transports
+    and kill the JVM for any fs errors or  single-sstable errors, so the node can
+    be replaced.stop_paranoid  shut down gossip and client transports even for single-sstable
+    errors,  kill the JVM for errors during startup.stop  shut down gossip and client
+    transports, leaving the node effectively dead, but  can still be inspected via
+    JMX, kill the JVM for errors during startup.best_effort   stop using the failed
+    disk and respond to requests based on   remaining available sstables.  This means
+    you WILL see obsolete   data at CL.ONE!ignore   ignore fatal errors and let requests
+    fail, as in pre-1.2 CassandraDefault Value: stop'
+  name: disk_failure_policy
+- default_value: stop
+  description: 'Policy for commit disk failures:die  shut down the node and kill the
+    JVM, so the node can be replaced.stop  shut down the node, leaving the node effectively
+    dead, but  can still be inspected via JMX.stop_commit  shutdown the commit log,
+    letting writes collect but  continuing to service reads, as in pre-2.0.5 Cassandraignore  ignore
+    fatal errors and let the batches failDefault Value: stop'
+  name: commit_failure_policy
+- default_value: <UNKNOWN>
+  description: 'Maximum size of the native protocol prepared statement cacheValid
+    values are either "auto" (omitting the value) or a value greater 0.Note that specifying
+    a too large value will result in long running GCs and possbilyout-of-memory errors.
+    Keep the value at a small fraction of the heap.If you constantly see "prepared
+    statements discarded in the last minute becausecache limit reached" messages,
+    the first step is to investigate the root causeof these messages and check whether
+    prepared statements are used correctly -i.e. use bind markers for variable parts.Do
+    only change the default value, if you really have more prepared statements thanfit
+    in the cache. In most cases it is not neccessary to change this value.Constantly
+    re-preparing statements is a performance penalty.Default value ("auto") is 1/256th
+    of the heap or 10MiB, whichever is greaterMin unit: MiB'
+  name: prepared_statements_cache_size
+- default_value: <UNKNOWN>
+  description: "Maximum size of the key cache in memory.Each key cache hit saves 1\
+    \ seek and each row cache hit saves 2 seeks at theminimum, sometimes more. The\
+    \ key cache is fairly tiny for the amount oftime it saves, so it\u2019s worthwhile\
+    \ to use it at large numbers.The row cache saves even more time, but must contain\
+    \ the entire row,so it is extremely space-intensive. It\u2019s best to only use\
+    \ therow cache if you have hot rows or static rows.if you reduce the size, you\
+    \ may not get you hottest keys loaded on startup.Default value is empty to make\
+    \ it \"auto\" (min(5% of Heap (in MiB), 100MiB)). Set to 0 to disable key cache.Min\
+    \ unit: MiB"
+  name: key_cache_size
+- default_value: 4h
+  description: 'Duration in seconds after which Cassandra shouldsave the key cache.
+    Caches are saved to saved_caches_directory asspecified in this configuration file.Saved
+    caches greatly improve cold-start speeds, and is relatively cheap interms of I/O
+    for the key cache. Row cache saving is much more expensive andhas limited use.Default
+    is 14400 or 4 hours.Min unit: sDefault Value: 4h'
+  name: key_cache_save_period
+- default_value: '100'
+  description: 'This option is commented out by default.Number of keys from the key
+    cache to saveDisabled by default, meaning all keys are going to be savedDefault
+    Value: 100'
+  name: key_cache_keys_to_save
+- default_value: org.apache.cassandra.cache.OHCProvider
+  description: 'This option is commented out by default.Row cache implementation class
+    name. Available implementations:org.apache.cassandra.cache.OHCProvider  Fully
+    off-heap row cache implementation (default).org.apache.cassandra.cache.SerializingCacheProvider  This
+    is the row cache implementation availabile  in previous releases of Cassandra.Default
+    Value: org.apache.cassandra.cache.OHCProvider'
+  name: row_cache_class_name
+- default_value: 0MiB
+  description: 'Maximum size of the row cache in memory.Please note that OHC cache
+    implementation requires some additional off-heap memory to managethe map structures
+    and some in-flight memory during operations before/after cache entries can beaccounted
+    against the cache capacity. This overhead is usually small compared to the whole
+    capacity.Do not specify more memory that the system can afford in the worst usual
+    situation and leave someheadroom for OS block level cache. Do never allow your
+    system to swap.Default value is 0, to disable row caching.Min unit: MiBDefault
+    Value: 0MiB'
+  name: row_cache_size
+- default_value: 0s
+  description: 'Duration in seconds after which Cassandra should save the row cache.Caches
+    are saved to saved_caches_directory as specified in this configuration file.Saved
+    caches greatly improve cold-start speeds, and is relatively cheap interms of I/O
+    for the key cache. Row cache saving is much more expensive andhas limited use.Default
+    is 0 to disable saving the row cache.Min unit: sDefault Value: 0s'
+  name: row_cache_save_period
+- default_value: '100'
+  description: 'This option is commented out by default.Number of keys from the row
+    cache to save.Specify 0 (which is the default), meaning all keys are going to
+    be savedDefault Value: 100'
+  name: row_cache_keys_to_save
+- default_value: <UNKNOWN>
+  description: "Maximum size of the counter cache in memory.Counter cache helps to\
+    \ reduce counter locks' contention for hot counter cells.In case of RF = 1 a counter\
+    \ cache hit will cause Cassandra to skip the read beforewrite entirely. With RF\
+    \ > 1 a counter cache hit will still help to reduce the durationof the lock hold,\
+    \ helping with hot counter cell updates, but will not allow skippingthe read entirely.\
+    \ Only the local (clock, count) tuple of a counter cell is keptin memory, not\
+    \ the whole counter, so it\u2019s relatively cheap.if you reduce the size, you\
+    \ may not get you hottest keys loaded on startup.Default value is empty to make\
+    \ it \"auto\" (min(2.5% of Heap (in MiB), 50MiB)). Set to 0 to disable counter\
+    \ cache.NOTE: if you perform counter deletes and rely on low gcgs, you should\
+    \ disable the counter cache.Min unit: MiB"
+  name: counter_cache_size
+- default_value: 7200s
+  description: 'Duration in seconds after which Cassandra shouldsave the counter cache
+    (keys only). Caches are saved to saved_caches_directory asspecified in this configuration
+    file.Default is 7200 or 2 hours.Min unit: sDefault Value: 7200s'
+  name: counter_cache_save_period
+- default_value: '100'
+  description: 'This option is commented out by default.Number of keys from the counter
+    cache to saveDisabled by default, meaning all keys are going to be savedDefault
+    Value: 100'
+  name: counter_cache_keys_to_save
+- default_value: ' /var/lib/cassandra/saved_caches'
+  description: 'This option is commented out by default.saved cachesIf not set, the
+    default directory is $CASSANDRA_HOME/data/saved_caches.Default Value:  /var/lib/cassandra/saved_caches'
+  name: saved_caches_directory
+- default_value: 30s
+  description: "This option is commented out by default.Number of seconds the server\
+    \ will wait for each cache (row, key, etc \u2026\u200B) to load while startingthe\
+    \ Cassandra process. Setting this to zero is equivalent to disabling all cache\
+    \ loading on startupwhile still having the cache during runtime.Min unit: sDefault\
+    \ Value: 30s"
+  name: cache_load_timeout
+- default_value: '2'
+  description: "This option is commented out by default.commitlog_sync may be either\
+    \ \"periodic\", \"group\", or \"batch.\"When in batch mode, Cassandra won\u2019\
+    t ack writes until the commit loghas been flushed to disk.  Each incoming write\
+    \ will trigger the flush task.commitlog_sync_batch_window_in_ms is a deprecated\
+    \ value. Previously it hadalmost no value, and is being removed.Default Value:\
+    \ 2"
+  name: commitlog_sync_batch_window_in_ms
+- default_value: 1000ms
+  description: 'This option is commented out by default.group mode is similar to batch
+    mode, where Cassandra will not ack writesuntil the commit log has been flushed
+    to disk. The difference is groupmode will wait up to commitlog_sync_group_window
+    between flushes.Min unit: msDefault Value: 1000ms'
+  name: commitlog_sync_group_window
+- default_value: periodic
+  description: 'the default option is "periodic" where writes may be acked immediatelyand
+    the CommitLog is simply synced every commitlog_sync_periodmilliseconds.Default
+    Value: periodic'
+  name: commitlog_sync
+- default_value: 10000ms
+  description: 'Min unit: msDefault Value: 10000ms'
+  name: commitlog_sync_period
+- default_value: <UNKNOWN>
+  description: 'This option is commented out by default.When in periodic commitlog
+    mode, the number of milliseconds to block writeswhile waiting for a slow disk
+    flush to complete.Min unit: ms'
+  name: periodic_commitlog_sync_lag_block
+- default_value: 32MiB
+  description: 'The size of the individual commitlog file segments.  A commitlogsegment
+    may be archived, deleted, or recycled once all the datain it (potentially from
+    each columnfamily in the system) has beenflushed to sstables.The default size
+    is 32, which is almost always fine, but if you arearchiving commitlog segments
+    (see commitlog_archiving.properties),then you probably want a finer granularity
+    of archiving; 8 or 16 MBis reasonable.Max mutation size is also configurable via
+    max_mutation_size setting incassandra.yaml. The default is half the size commitlog_segment_size
+    in bytes.This should be positive and less than 2048.If max_mutation_size is set
+    explicitly then commitlog_segment_size mustbe set to at least twice the size of
+    max_mutation_sizeMin unit: MiBDefault Value: 32MiB'
+  name: commitlog_segment_size
+- default_value: <UNKNOWN>
+  description: 'This option is commented out by default.Compression to apply to the
+    commit log. If omitted, the commit logwill be written uncompressed.  LZ4, Snappy,
+    and Deflate compressorsare supported.Default Value (complex option):    #   -
+    class_name: LZ4Compressor    #     parameters:    #         -'
+  name: commitlog_compression
+- default_value: Always flush with the same compressor that the table uses. This
+  description: 'This option is commented out by default.Compression to apply to SSTables
+    as they flush for compressed tables.Note that tables without compression enabled
+    do not respect this flag.As high ratio compressors like LZ4HC, Zstd, and Deflate
+    can potentiallyblock flushes for too long, the default is to flush with a known
+    fastcompressor in those cases. Options are:none : Flush without compressing blocks
+    but while still doing checksums.fast : Flush with a fast compressor. If the table
+    is already using a       fast compressor that compressor is used.Default Value:
+    Always flush with the same compressor that the table uses. This'
+  name: table
+- default_value: fast
+  description: 'This option is commented out by default.       was the pre 4.0 behavior.Default
+    Value: fast'
+  name: flush_compression
+- default_value: <UNKNOWN>
+  description: 'any class that implements the SeedProvider interface and has aconstructor
+    that takes a Map<String, String> of parameters will do.Default Value (complex
+    option):      # Addresses of hosts that are deemed contact points.      # Cassandra
+    nodes use this list of hosts to find each other and learn      # the topology
+    of the ring.  You must change this if you are running      # multiple nodes!      -
+    class_name: org.apache.cassandra.locator.SimpleSeedProvider        parameters:          #
+    seeds is actually a comma-delimited list of addresses.          # Ex: "<ip1>,<ip2>,<ip3>"          -
+    seeds: "127.0.0.1:7000"'
+  name: seed_provider
+- default_value: '32'
+  description: "For workloads with more data than can fit in memory, Cassandra\u2019\
+    sbottleneck will be reads that need to fetch data fromdisk. \"concurrent_reads\"\
+    \ should be set to (16 * number_of_drives) inorder to allow the operations to\
+    \ enqueue low enough in the stackthat the OS and drives can reorder them. Same\
+    \ applies to\"concurrent_counter_writes\", since counter writes read the currentvalues\
+    \ before incrementing and writing them back.On the other hand, since writes are\
+    \ almost never IO bound, the idealnumber of \"concurrent_writes\" is dependent\
+    \ on the number of cores inyour system; (8 * number_of_cores) is a good rule of\
+    \ thumb.Default Value: 32"
+  name: concurrent_reads
+- default_value: '32'
+  description: 'Default Value: 32'
+  name: concurrent_writes
+- default_value: '32'
+  description: 'Default Value: 32'
+  name: concurrent_counter_writes
+- default_value: '32'
+  description: 'For materialized view writes, as there is a read involved, so this
+    shouldbe limited by the less of concurrent reads or concurrent writes.Default
+    Value: 32'
+  name: concurrent_materialized_view_writes
+- default_value: 128MiB
+  description: 'This option is commented out by default.Maximum memory to use for
+    inter-node and client-server networking buffers.Defaults to the smaller of 1/16
+    of heap or 128MB. This pool is allocated off-heap,so is in addition to the memory
+    allocated for heap. The cache also has on-heapoverhead which is roughly 128 bytes
+    per chunk (i.e. 0.2% of the reserved sizeif the default 64k chunk size is used).Memory
+    is only allocated when needed.Min unit: MiBDefault Value: 128MiB'
+  name: networking_cache_size
+- default_value: 'false'
+  description: 'This option is commented out by default.Enable the sstable chunk cache.  The
+    chunk cache will store recently accessedsections of the sstable in-memory as uncompressed
+    buffers.Default Value: false'
+  name: file_cache_enabled
+- default_value: 512MiB
+  description: 'This option is commented out by default.Maximum memory to use for
+    sstable chunk cache and buffer pooling.32MB of this are reserved for pooling buffers,
+    the rest is used for chunk cachethat holds uncompressed sstable chunks.Defaults
+    to the smaller of 1/4 of heap or 512MB. This pool is allocated off-heap,so is
+    in addition to the memory allocated for heap. The cache also has on-heapoverhead
+    which is roughly 128 bytes per chunk (i.e. 0.2% of the reserved sizeif the default
+    64k chunk size is used).Memory is only allocated when needed.Min unit: MiBDefault
+    Value: 512MiB'
+  name: file_cache_size
+- default_value: 'true'
+  description: 'This option is commented out by default.Flag indicating whether to
+    allocate on or off heap when the sstable bufferpool is exhausted, that is when
+    it has exceeded the maximum memoryfile_cache_size, beyond which it will not cache
+    buffers but allocate on request.Default Value: true'
+  name: buffer_pool_use_heap_if_exhausted
+- default_value: ssd
+  description: 'This option is commented out by default.The strategy for optimizing
+    disk readPossible values are:ssd (for solid state disks, the default)spinning
+    (for spinning disks)Default Value: ssd'
+  name: disk_optimization_strategy
+- default_value: 2048MiB
+  description: 'This option is commented out by default.Total permitted memory to
+    use for memtables. Cassandra will stopaccepting writes when the limit is exceeded
+    until a flush completes,and will trigger a flush based on memtable_cleanup_thresholdIf
+    omitted, Cassandra will set both to 1/4 the size of the heap.Min unit: MiBDefault
+    Value: 2048MiB'
+  name: memtable_heap_space
+- default_value: 2048MiB
+  description: 'This option is commented out by default.Min unit: MiBDefault Value:
+    2048MiB'
+  name: memtable_offheap_space
+- default_value: '0.11'
+  description: 'This option is commented out by default.memtable_cleanup_threshold
+    is deprecated. The default calculationis the only reasonable choice. See the comments
+    on  memtable_flush_writersfor more information.Ratio of occupied non-flushing
+    memtable size to total permitted sizethat will trigger a flush of the largest
+    memtable. Larger mct willmean larger flushes and hence less compaction, but also
+    less concurrentflush activity which can make it difficult to keep your disks fedunder
+    heavy write load.memtable_cleanup_threshold defaults to 1 / (memtable_flush_writers
+    + 1)Default Value: 0.11'
+  name: memtable_cleanup_threshold
+- default_value: heap_buffers
+  description: 'Specify the way Cassandra allocates and manages memtable memory.Options
+    are:heap_buffers  on heap nio buffersoffheap_buffers  off heap (direct) nio buffersoffheap_objects   off
+    heap objectsDefault Value: heap_buffers'
+  name: memtable_allocation_type
+- default_value: <UNKNOWN>
+  description: 'This option is commented out by default.Limit memory usage for Merkle
+    tree calculations during repairs of a certaintable and common token range. Repair
+    commands targetting multiple tables orvirtual nodes can exceed this limit depending
+    on concurrent_merkle_tree_requests.The default is 1/16th of the available heap.
+    The main tradeoff is thatsmaller trees have less resolution, which can lead to
+    over-streaming data.If you see heap pressure during repairs, consider lowering
+    this, but youcannot go below one mebibyte. If you see lots of over-streaming,
+    considerraising this or using subrange repair.For more details see issues.apache.org/jira/browse/CASSANDRA-14096.Min
+    unit: MiB'
+  name: repair_session_space
+- default_value: '0'
+  description: "This option is commented out by default.The number of simultaneous\
+    \ Merkle tree requests during repairs that canbe performed by a repair command.\
+    \ The size of each validation request islimited by the repair_session_space property,\
+    \ so setting this to 1 will makesure that a repair command doesn\u2019t exceed\
+    \ that limit, even if the repaircommand is repairing multiple tables or multiple\
+    \ virtual nodes.There isn\u2019t a limit by default for backwards compatibility,\
+    \ but this canproduce OOM for  commands repairing multiple tables or multiple\
+    \ virtual nodes.A limit of just 1 simultaneous Merkle tree request is generally\
+    \ recommendedwith no virtual nodes so repair_session_space, and thereof the Merkle\
+    \ treeresolution, can be high. For virtual nodes a value of 1 with the defaultrepair_session_space\
+    \ value will produce higher resolution Merkle treesat the expense of speed. Alternatively,\
+    \ when working with virtual nodes itcan make sense to reduce the repair_session_space\
+    \ and increase the value ofconcurrent_merkle_tree_requests because each range\
+    \ will contain fewer data.For more details see issues.apache.org/jira/browse/CASSANDRA-19336.A\
+    \ zero value means no limit.Default Value: 0"
+  name: concurrent_merkle_tree_requests
+- default_value: 8192MiB
+  description: 'This option is commented out by default.Total space to use for commit
+    logs on disk.If space gets above this value, Cassandra will flush every dirty
+    CFin the oldest segment and remove it.  So a small total commitlog spacewill tend
+    to cause more flush activity on less-active columnfamilies.The default value is
+    the smaller of 8192, and 1/4 of the total spaceof the commitlog volume.Default
+    Value: 8192MiB'
+  name: commitlog_total_space
+- default_value: '2'
+  description: 'This option is commented out by default.This sets the number of memtable
+    flush writer threads per diskas well as the total number of memtables that can
+    be flushed concurrently.These are generally a combination of compute and IO bound.Memtable
+    flushing is more CPU efficient than memtable ingest and a single threadcan keep
+    up with the ingest rate of a whole server on a single fast diskuntil it temporarily
+    becomes IO bound under contention typically with compaction.At that point you
+    need multiple flush threads. At some point in the futureit may become CPU bound
+    all the time.You can tell if flushing is falling behind using the MemtablePool.BlockedOnAllocationmetric
+    which should be 0, but will be non-zero if threads are blocked waiting on flushingto
+    free memory.memtable_flush_writers defaults to two for a single data directory.This
+    means that two  memtables can be flushed concurrently to the single data directory.If
+    you have multiple data directories the default is one memtable flushing at a timebut
+    the flush will use a thread per data directory so you will get two or more writers.Two
+    is generally enough to flush on a fast disk [array] mounted as a single data directory.Adding
+    more flush writers will result in smaller more frequent flushes that introduce
+    morecompaction overhead.There is a direct tradeoff between number of memtables
+    that can be flushed concurrentlyand flush size and frequency. More is not better
+    you just need enough flush writersto never stall waiting for flushing to free
+    memory.Default Value: 2'
+  name: memtable_flush_writers
+- default_value: 4096MiB
+  description: 'This option is commented out by default.Total space to use for change-data-capture
+    logs on disk.If space gets above this value, Cassandra will throw WriteTimeoutExceptionon
+    Mutations including tables with CDC enabled. A CDCCompactor is responsiblefor
+    parsing the raw CDC logs and deleting them when parsing is completed.The default
+    value is the min of 4096 MiB and 1/8th of the total spaceof the drive where cdc_raw_directory
+    resides.Min unit: MiBDefault Value: 4096MiB'
+  name: cdc_total_space
+- default_value: 250ms
+  description: 'This option is commented out by default.When we hit our cdc_raw limit
+    and the CDCCompactor is either running behindor experiencing backpressure, we
+    check at the following interval to see if anynew space for cdc-tracked tables
+    has been made available. Default to 250msMin unit: msDefault Value: 250ms'
+  name: cdc_free_space_check_interval
+- default_value: <UNKNOWN>
+  description: 'A fixed memory pool size in MB for for SSTable index summaries. If
+    leftempty, this will default to 5% of the heap size. If the memory usage ofall
+    index summaries exceeds this limit, SSTables with low read rates willshrink their
+    index summaries in order to meet this limit.  However, thisis a best-effort process.
+    In extreme conditions Cassandra may need to usemore than this amount of memory.Min
+    unit: KiB'
+  name: index_summary_capacity
+- default_value: 60m
+  description: 'How frequently index summaries should be resampled.  This is doneperiodically
+    to redistribute memory from the fixed-size pool to sstablesproportional their
+    recent read rates.  Setting to null value will disable thisprocess, leaving existing
+    index summaries at their current sampling level.Min unit: mDefault Value: 60m'
+  name: index_summary_resize_interval
+- default_value: 'false'
+  description: 'Whether to, when doing sequential writing, fsync() at intervals inorder
+    to force the operating system to flush the dirtybuffers. Enable this to avoid
+    sudden dirty buffer flushing fromimpacting read latencies. Almost always a good
+    idea on SSDs; notnecessarily on platters.Default Value: false'
+  name: trickle_fsync
+- default_value: 10240KiB
+  description: 'Min unit: KiBDefault Value: 10240KiB'
+  name: trickle_fsync_interval
+- default_value: '7000'
+  description: 'TCP port, for commands and dataFor security reasons, you should not
+    expose this port to the internet.  Firewall it if needed.Default Value: 7000'
+  name: storage_port
+- default_value: '7001'
+  description: 'SSL port, for legacy encrypted communication. This property is unused
+    unless enabled inserver_encryption_options (see below). As of cassandra 4.0, this
+    property is deprecatedas a single port can be used for either/both secure and
+    insecure connections.For security reasons, you should not expose this port to
+    the internet. Firewall it if needed.Default Value: 7001'
+  name: ssl_storage_port
+- default_value: localhost
+  description: 'Address or interface to bind to and tell other Cassandra nodes to
+    connect to.You must change this if you want multiple nodes to be able to communicate!Set
+    listen_address OR listen_interface, not both.Leaving it blank leaves it up to
+    InetAddress.getLocalHost(). Thiswill always do the Right Thing if the node is
+    properly configured(hostname, name resolution, etc), and the Right Thing is to
+    use theaddress associated with the hostname (it might not be). If unresolvableit
+    will fall back to InetAddress.getLoopbackAddress(), which is wrong for production
+    systems.Setting listen_address to 0.0.0.0 is always wrong.Default Value: localhost'
+  name: listen_address
+- default_value: eth0
+  description: 'This option is commented out by default.Set listen_address OR listen_interface,
+    not both. Interfaces must correspondto a single address, IP aliasing is not supported.Default
+    Value: eth0'
+  name: listen_interface
+- default_value: 'false'
+  description: 'This option is commented out by default.If you choose to specify the
+    interface by name and the interface has an ipv4 and an ipv6 addressyou can specify
+    which should be chosen using listen_interface_prefer_ipv6. If false the first
+    ipv4address will be used. If true the first ipv6 address will be used. Defaults
+    to false preferringipv4. If there is only one address it will be selected regardless
+    of ipv4/ipv6.Default Value: false'
+  name: listen_interface_prefer_ipv6
+- default_value: 1.2.3.4
+  description: 'This option is commented out by default.Address to broadcast to other
+    Cassandra nodesLeaving this blank will set it to the same value as listen_addressDefault
+    Value: 1.2.3.4'
+  name: broadcast_address
+- default_value: 'false'
+  description: 'This option is commented out by default.When using multiple physical
+    network interfaces, set thisto true to listen on broadcast_address in addition
+    tothe listen_address, allowing nodes to communicate in bothinterfaces.Ignore this
+    property if the network configuration automaticallyroutes  between the public
+    and private networks such as EC2.Default Value: false'
+  name: listen_on_broadcast_address
+- default_value: org.apache.cassandra.auth.AllowAllInternodeAuthenticator
+  description: 'This option is commented out by default.Internode authentication backend,
+    implementing IInternodeAuthenticator;used to allow/disallow connections from peer
+    nodes.Default Value: org.apache.cassandra.auth.AllowAllInternodeAuthenticator'
+  name: internode_authenticator
+- default_value: 'true'
+  description: 'Whether to start the native transport server.The address on which
+    the native transport is bound is defined by rpc_address.Default Value: true'
+  name: start_native_transport
+- default_value: '9042'
+  description: 'port for the CQL native transport to listen for clients onFor security
+    reasons, you should not expose this port to the internet.  Firewall it if needed.Default
+    Value: 9042'
+  name: native_transport_port
+- default_value: '9142'
+  description: 'This option is commented out by default.Enabling native transport
+    encryption in client_encryption_options allows you to either useencryption for
+    the standard port or to use a dedicated, additional port along with the unencryptedstandard
+    native_transport_port.Enabling client encryption and keeping native_transport_port_ssl
+    disabled will use encryptionfor native_transport_port. Setting native_transport_port_ssl
+    to a different valuefrom native_transport_port will use encryption for native_transport_port_ssl
+    whilekeeping native_transport_port unencrypted.Default Value: 9142'
+  name: native_transport_port_ssl
+- default_value: '128'
+  description: 'This option is commented out by default.The maximum threads for handling
+    requests (note that idle threads are stoppedafter 30 seconds so there is not corresponding
+    minimum setting).Default Value: 128'
+  name: native_transport_max_threads
+- default_value: 16MiB
+  description: "This option is commented out by default.The maximum size of allowed\
+    \ frame. Frame (requests) larger than this willbe rejected as invalid. The default\
+    \ is 16MiB. If you\u2019re changing this parameter,you may want to adjust max_value_size\
+    \ accordingly. This should be positive and less than 2048.Min unit: MiBDefault\
+    \ Value: 16MiB"
+  name: native_transport_max_frame_size
+- default_value: '-1'
+  description: 'This option is commented out by default.The maximum number of concurrent
+    client connections.The default is -1, which means unlimited.Default Value: -1'
+  name: native_transport_max_concurrent_connections
+- default_value: '-1'
+  description: 'This option is commented out by default.The maximum number of concurrent
+    client connections per source ip.The default is -1, which means unlimited.Default
+    Value: -1'
+  name: native_transport_max_concurrent_connections_per_ip
+- default_value: 'true'
+  description: 'Controls whether Cassandra honors older, yet currently supported,
+    protocol versions.The default is true, which means all supported protocols will
+    be honored.Default Value: true'
+  name: native_transport_allow_older_protocols
+- default_value: 60000ms
+  description: 'This option is commented out by default.Controls when idle client
+    connections are closed. Idle connections are ones that had neither readsnor writes
+    for a time period.Clients may implement heartbeats by sending OPTIONS native protocol
+    message after a timeout, whichwill reset idle timeout timer on the server side.
+    To close idle client connections, correspondingvalues for heartbeat intervals
+    have to be set on the client side.Idle connection timeouts are disabled by default.Min
+    unit: msDefault Value: 60000ms'
+  name: native_transport_idle_timeout
+- default_value: 'false'
+  description: 'This option is commented out by default.When enabled, limits the number
+    of native transport requests dispatched for processing per second.Behavior once
+    the limit has been breached depends on the value of THROW_ON_OVERLOAD specified
+    inthe STARTUP message sent by the client during connection establishment. (See
+    section "4.1.1. STARTUP"in "CQL BINARY PROTOCOL v5".) With the THROW_ON_OVERLOAD
+    flag enabled, messages that breach the limitare dropped, and an OverloadedException
+    is thrown for the client to handle. When the flag is notenabled, the server will
+    stop consuming messages from the channel/socket, putting backpressure onthe client
+    while already dispatched messages are processed.Default Value: false'
+  name: native_transport_rate_limiting_enabled
+- default_value: '1000000'
+  description: 'This option is commented out by default.Default Value: 1000000'
+  name: native_transport_max_requests_per_second
+- default_value: localhost
+  description: 'The address or interface to bind the native transport server to.Set
+    rpc_address OR rpc_interface, not both.Leaving rpc_address blank has the same
+    effect as on listen_address(i.e. it will be based on the configured hostname of
+    the node).Note that unlike listen_address, you can specify 0.0.0.0, but you must
+    alsoset broadcast_rpc_address to a value other than 0.0.0.0.For security reasons,
+    you should not expose this port to the internet.  Firewall it if needed.Default
+    Value: localhost'
+  name: rpc_address
+- default_value: eth1
+  description: 'This option is commented out by default.Set rpc_address OR rpc_interface,
+    not both. Interfaces must correspondto a single address, IP aliasing is not supported.Default
+    Value: eth1'
+  name: rpc_interface
+- default_value: 'false'
+  description: 'This option is commented out by default.If you choose to specify the
+    interface by name and the interface has an ipv4 and an ipv6 addressyou can specify
+    which should be chosen using rpc_interface_prefer_ipv6. If false the first ipv4address
+    will be used. If true the first ipv6 address will be used. Defaults to false preferringipv4.
+    If there is only one address it will be selected regardless of ipv4/ipv6.Default
+    Value: false'
+  name: rpc_interface_prefer_ipv6
+- default_value: 1.2.3.4
+  description: 'This option is commented out by default.RPC address to broadcast to
+    drivers and other Cassandra nodes. This cannotbe set to 0.0.0.0. If left blank,
+    this will be set to the value ofrpc_address. If rpc_address is set to 0.0.0.0,
+    broadcast_rpc_address mustbe set.Default Value: 1.2.3.4'
+  name: broadcast_rpc_address
+- default_value: 'true'
+  description: 'enable or disable keepalive on rpc/native connectionsDefault Value:
+    true'
+  name: rpc_keepalive
+- default_value: <UNKNOWN>
+  description: 'This option is commented out by default.Uncomment to set socket buffer
+    size for internode communicationNote that when setting this, the buffer size is
+    limited by net.core.wmem_maxand when not setting it it is defined by net.ipv4.tcp_wmemSee
+    also:/proc/sys/net/core/wmem_max/proc/sys/net/core/rmem_max/proc/sys/net/ipv4/tcp_wmem/proc/sys/net/ipv4/tcp_wmemand
+    ''man tcp''Min unit: B'
+  name: internode_socket_send_buffer_size
+- default_value: <UNKNOWN>
+  description: 'This option is commented out by default.Uncomment to set socket buffer
+    size for internode communicationNote that when setting this, the buffer size is
+    limited by net.core.wmem_maxand when not setting it it is defined by net.ipv4.tcp_wmemMin
+    unit: B'
+  name: internode_socket_receive_buffer_size
+- default_value: 'false'
+  description: "Set to true to have Cassandra create a hard link to each sstableflushed\
+    \ or streamed locally in a backups/ subdirectory of thekeyspace data.  Removing\
+    \ these links is the operator\u2019sresponsibility.Default Value: false"
+  name: incremental_backups
+- default_value: 'false'
+  description: "Whether or not to take a snapshot before each compaction.  Becareful\
+    \ using this option, since Cassandra won\u2019t clean up thesnapshots for you.\
+    \  Mostly useful if you\u2019re paranoid when thereis a data format change.Default\
+    \ Value: false"
+  name: snapshot_before_compaction
+- default_value: 'true'
+  description: 'Whether or not a snapshot is taken of the data before keyspace truncationor
+    dropping of column families. The STRONGLY advised default of trueshould be used
+    to provide data safety. If you set this flag to false, you willlose data on truncation
+    or drop.Default Value: true'
+  name: auto_snapshot
+- default_value: 30d
+  description: 'This option is commented out by default.Adds a time-to-live (TTL)
+    to auto snapshots generated by tabletruncation or drop (when enabled).After the
+    TTL is elapsed, the snapshot is automatically cleared.By default, auto snapshots
+    do not have TTL, uncomment the property belowto enable TTL on auto snapshots.Accepted
+    units: d (days), h (hours) or m (minutes)Default Value: 30d'
+  name: auto_snapshot_ttl
+- default_value: '0'
+  description: 'The act of creating or clearing a snapshot involves creating or removingpotentially
+    tens of thousands of links, which can cause significant performanceimpact, especially
+    on consumer grade SSDs. A non-zero value here canbe used to throttle these links
+    to avoid negative performance impact oftaking and clearing snapshotsDefault Value:
+    0'
+  name: snapshot_links_per_second
+- default_value: 64KiB
+  description: 'Granularity of the collation index of rows within a partition.Increase
+    if your rows are large, or if you have a very largenumber of rows per partition.  The
+    competing goals are these:a smaller granularity means more index entries are generatedand
+    looking up rows withing the partition by collation columnis fasterbut, Cassandra
+    will keep the collation index in memory for hot  rows (as part of the key cache),
+    so a larger granularity means  you can cache more hot rowsMin unit: KiBDefault
+    Value: 64KiB'
+  name: column_index_size
+- default_value: 2KiB
+  description: 'Per sstable indexed key cache entries (the collation index in memorymentioned
+    above) exceeding this size will not be held on heap.This means that only partition
+    information is held on heap and theindex entries are read from disk.Note that
+    this size refers to the size of theserialized index information and not the size
+    of the partition.Min unit: KiBDefault Value: 2KiB'
+  name: column_index_cache_size
+- default_value: '1'
+  description: 'This option is commented out by default.Number of simultaneous compactions
+    to allow, NOT includingvalidation "compactions" for anti-entropy repair.  Simultaneouscompactions
+    can help preserve read performance in a mixed read/writeworkload, by mitigating
+    the tendency of small sstables to accumulateduring a single long running compactions.
+    The default is usuallyfine and if you experience problems with compaction running
+    tooslowly or too fast, you should look atcompaction_throughput first.concurrent_compactors
+    defaults to the smaller of (number of disks,number of cores), with a minimum of
+    2 and a maximum of 8.If your data directories are backed by SSD, you should increase
+    thisto the number of cores.Default Value: 1'
+  name: concurrent_compactors
+- default_value: '0'
+  description: 'This option is commented out by default.Number of simultaneous repair
+    validations to allow. If not set or set toa value less than 1, it defaults to
+    the value of concurrent_compactors.To set a value greeater than concurrent_compactors
+    at startup, the systemproperty cassandra.allow_unlimited_concurrent_validations
+    must be set totrue. To dynamically resize to a value > concurrent_compactors on
+    a runningnode, first call the bypassConcurrentValidatorsLimit method on theorg.apache.cassandra.db:type=StorageService
+    mbeanDefault Value: 0'
+  name: concurrent_validations
+- default_value: '1'
+  description: 'Number of simultaneous materialized view builder tasks to allow.Default
+    Value: 1'
+  name: concurrent_materialized_view_builders
+- default_value: 64MiB/s
+  description: 'Throttles compaction to the given total throughput across the entiresystem.
+    The faster you insert data, the faster you need to compact inorder to keep the
+    sstable count down, but in general, setting this to16 to 32 times the rate you
+    are inserting data is more than sufficient.Setting this to 0 disables throttling.
+    Note that this accounts for all typesof compaction, including validation compaction
+    (building Merkle treesfor repairs).Default Value: 64MiB/s'
+  name: compaction_throughput
+- default_value: 50MiB
+  description: 'When compacting, the replacement sstable(s) can be opened before theyare
+    completely written, and used in place of the prior sstables forany range that
+    has been written. This helps to smoothly transfer readsbetween the sstables, reducing
+    page cache churn and keeping hot rows hotSet sstable_preemptive_open_interval
+    to null for disabled which is equivalent tosstable_preemptive_open_interval_in_mb
+    being negativeMin unit: MiBDefault Value: 50MiB'
+  name: sstable_preemptive_open_interval
+- default_value: 'false'
+  description: 'Starting from 4.1 sstables support UUID based generation identifiers.
+    They are disabled by defaultbecause once enabled, there is no easy way to downgrade.
+    When the node is restarted with this optionset to true, each newly created sstable
+    will have a UUID based generation identifier and such files arenot readable by
+    previous Cassandra versions. At some point, this option will become true by defaultand
+    eventually get removed from the configuration.Default Value: false'
+  name: uuid_sstable_identifiers_enabled
+- default_value: 'true'
+  description: 'This option is commented out by default.When enabled, permits Cassandra
+    to zero-copy stream entire eligibleSSTables between nodes, including every component.This
+    speeds up the network transfer significantly subject tothrottling specified by
+    entire_sstable_stream_throughput_outbound,and entire_sstable_inter_dc_stream_throughput_outboundfor
+    inter-DC transfers.Enabling this will reduce the GC pressure on sending and receiving
+    node.When unset, the default is enabled. While this feature tries to keep thedisks
+    balanced, it cannot guarantee it. This feature will be automaticallydisabled if
+    internode encryption is enabled.Default Value: true'
+  name: stream_entire_sstables
+- default_value: 24MiB/s
+  description: 'This option is commented out by default.Throttles entire SSTable outbound
+    streaming file transfers onthis node to the given total throughput in Mbps.Setting
+    this value to 0 it disables throttling.When unset, the default is 200 Mbps or
+    24 MiB/s.Default Value: 24MiB/s'
+  name: entire_sstable_stream_throughput_outbound
+- default_value: 24MiB/s
+  description: 'This option is commented out by default.Throttles entire SSTable file
+    streaming between datacenters.Setting this value to 0 disables throttling for
+    entire SSTable inter-DC file streaming.When unset, the default is 200 Mbps or
+    24 MiB/s.Default Value: 24MiB/s'
+  name: entire_sstable_inter_dc_stream_throughput_outbound
+- default_value: 24MiB/s
+  description: 'This option is commented out by default.Throttles all outbound streaming
+    file transfers on this node to thegiven total throughput in Mbps. This is necessary
+    because Cassandra doesmostly sequential IO when streaming data during bootstrap
+    or repair, whichcan lead to saturating the network connection and degrading rpc
+    performance.When unset, the default is 200 Mbps or 24 MiB/s.Default Value: 24MiB/s'
+  name: stream_throughput_outbound
+- default_value: 24MiB/s
+  description: 'This option is commented out by default.Throttles all streaming file
+    transfer between the datacenters,this setting allows users to throttle inter dc
+    stream throughput in additionto throttling all network stream traffic as configured
+    withstream_throughput_outbound_megabits_per_secWhen unset, the default is 200
+    Mbps or 24 MiB/s.Default Value: 24MiB/s'
+  name: inter_dc_stream_throughput_outbound
+- default_value: 5000ms
+  description: "Server side timeouts for requests. The server will return a timeout\
+    \ exceptionto the client if it can\u2019t complete an operation within the correspondingtimeout.\
+    \ Those settings are a protection against:  1) having client wait on an operation\
+    \ that might never terminate due to some     failures.  2) operations that use\
+    \ too much CPU/read too much data (leading to memory build     up) by putting\
+    \ a limit to how long an operation will execute.For this reason, you should avoid\
+    \ putting these settings too high. In other words,if you are timing out requests\
+    \ because of underlying resource constraints thenincreasing the timeout will just\
+    \ cause more problems. Of course putting them toolow is equally ill-advised since\
+    \ clients could get timeouts even for successfuloperations just because the timeout\
+    \ setting is too tight.How long the coordinator should wait for read operations\
+    \ to complete.Lowest acceptable value is 10 ms.Min unit: msDefault Value: 5000ms"
+  name: read_request_timeout
+- default_value: 10000ms
+  description: 'How long the coordinator should wait for seq or index scans to complete.Lowest
+    acceptable value is 10 ms.Min unit: msDefault Value: 10000ms'
+  name: range_request_timeout
+- default_value: 2000ms
+  description: 'How long the coordinator should wait for writes to complete.Lowest
+    acceptable value is 10 ms.Min unit: msDefault Value: 2000ms'
+  name: write_request_timeout
+- default_value: 5000ms
+  description: 'How long the coordinator should wait for counter writes to complete.Lowest
+    acceptable value is 10 ms.Min unit: msDefault Value: 5000ms'
+  name: counter_write_request_timeout
+- default_value: 1000ms
+  description: 'How long a coordinator should continue to retry a CAS operationthat
+    contends with other proposals for the same row.Lowest acceptable value is 10 ms.Min
+    unit: msDefault Value: 1000ms'
+  name: cas_contention_timeout
+- default_value: 60000ms
+  description: 'How long the coordinator should wait for truncates to complete(This
+    can be much longer, because unless auto_snapshot is disabledwe need to flush first
+    so we can snapshot before removing the data.)Lowest acceptable value is 10 ms.Min
+    unit: msDefault Value: 60000ms'
+  name: truncate_request_timeout
+- default_value: 10000ms
+  description: 'The default timeout for other, miscellaneous operations.Lowest acceptable
+    value is 10 ms.Min unit: msDefault Value: 10000ms'
+  name: request_timeout
+- default_value: 2000ms
+  description: 'This option is commented out by default.Defensive settings for protecting
+    Cassandra from true network partitions.See (CASSANDRA-14358) for details.The amount
+    of time to wait for internode tcp connections to establish.Min unit: msDefault
+    Value: 2000ms'
+  name: internode_tcp_connect_timeout
+- default_value: 30000ms
+  description: 'This option is commented out by default.The amount of time unacknowledged
+    data is allowed on a connection before we throw out the connectionNote this is
+    only supported on Linux + epoll, and it appears to behave oddly above a setting
+    of 30000(it takes much longer than 30s) as of Linux 4.12. If you want something
+    that high set this to 0which picks up the OS default and configure the net.ipv4.tcp_retries2
+    sysctl to be ~8.Min unit: msDefault Value: 30000ms'
+  name: internode_tcp_user_timeout
+- default_value: 300000ms
+  description: 'This option is commented out by default.The amount of time unacknowledged
+    data is allowed on a streaming connection.The default is 5 minutes. Increase it
+    or set it to 0 in order to increase the timeout.Min unit: msDefault Value: 300000ms'
+  name: internode_streaming_tcp_user_timeout
+- default_value: 4MiB
+  description: 'This option is commented out by default.Global, per-endpoint and per-connection
+    limits imposed on messages queued for delivery to other nodesand waiting to be
+    processed on arrival from other nodes in the cluster.  These limits are applied
+    to the on-wiresize of the message being sent or received.The basic per-link limit
+    is consumed in isolation before any endpoint or global limit is imposed.Each node-pair
+    has three links: urgent, small and large.  So any given node may have a maximum
+    ofN*3*(internode_application_send_queue_capacity+internode_application_receive_queue_capacity)messages
+    queued without any coordination between them although in practice, with token-aware
+    routing, only RF*tokensnodes should need to communicate with significant bandwidth.The
+    per-endpoint limit is imposed on all messages exceeding the per-link limit, simultaneously
+    with the global limit,on all links to or from a single node in the cluster.The
+    global limit is imposed on all messages exceeding the per-link limit, simultaneously
+    with the per-endpoint limit,on all links to or from any node in the cluster.Min
+    unit: BDefault Value: 4MiB'
+  name: internode_application_send_queue_capacity
+- default_value: 128MiB
+  description: 'This option is commented out by default.Default Value: 128MiB'
+  name: internode_application_send_queue_reserve_endpoint_capacity
+- default_value: 512MiB
+  description: 'This option is commented out by default.Default Value: 512MiB'
+  name: internode_application_send_queue_reserve_global_capacity
+- default_value: 4MiB
+  description: 'This option is commented out by default.Default Value: 4MiB'
+  name: internode_application_receive_queue_capacity
+- default_value: 128MiB
+  description: 'This option is commented out by default.Default Value: 128MiB'
+  name: internode_application_receive_queue_reserve_endpoint_capacity
+- default_value: 512MiB
+  description: 'This option is commented out by default.Default Value: 512MiB'
+  name: internode_application_receive_queue_reserve_global_capacity
+- default_value: 500ms
+  description: 'How long before a node logs slow queries. Select queries that take
+    longer thanthis timeout to execute, will generate an aggregated log message, so
+    that slow queriescan be identified. Set this value to zero to disable slow query
+    logging.Min unit: msDefault Value: 500ms'
+  name: slow_query_log_timeout
+- default_value: 'true'
+  description: 'This option is commented out by default.Enable operation timeout information
+    exchange between nodes to accuratelymeasure request timeouts.  If disabled, replicas
+    will assume that requestswere forwarded to them instantly by the coordinator,
+    which means thatunder overload conditions we will waste that much extra time processingalready-timed-out
+    requests.Warning: It is generally assumed that users have setup NTP on their clusters,
+    and that clocks are modestly in sync,since this is a requirement for general correctness
+    of last write wins.Default Value: true'
+  name: internode_timeout
+- default_value: 300s
+  description: "This option is commented out by default.Set period for idle state\
+    \ control messages for earlier detection of failed streamsThis node will send\
+    \ a keep-alive message periodically on the streaming\u2019s control channel.This\
+    \ ensures that any eventual SocketTimeoutException will occur within 2 keep-alive\
+    \ cyclesIf the node cannot send, or timeouts sending, the keep-alive message on\
+    \ the netty control channelthe stream session is closed.Default value is 300s\
+    \ (5 minutes), which means stalled streamsare detected within 10 minutesSpecify\
+    \ 0 to disable.Min unit: sDefault Value: 300s"
+  name: streaming_keep_alive_period
+- default_value: '1'
+  description: 'This option is commented out by default.Limit number of connections
+    per host for streamingIncrease this when you notice that joins are CPU-bound rather
+    that networkbound (for example a few nodes with big files).Default Value: 1'
+  name: streaming_connections_per_host
+- default_value: 3d
+  description: 'This option is commented out by default.Settings for stream stats
+    tracking; used by system_views.streaming tableHow long before a stream is evicted
+    from tracking; this impacts both historic and currently runningstreams.Default
+    Value: 3d'
+  name: streaming_state_expires
+- default_value: 40MiB
+  description: 'This option is commented out by default.How much memory may be used
+    for tracking before evicting session from tracking; once crossedhistoric and currently
+    running streams maybe impacted.Default Value: 40MiB'
+  name: streaming_state_size
+- default_value: 'true'
+  description: 'This option is commented out by default.Enable/Disable tracking of
+    streaming statsDefault Value: true'
+  name: streaming_stats_enabled
+- default_value: 'false'
+  description: 'This option is commented out by default.Allows denying configurable
+    access (rw/rr) to operations on configured ks, table, and partitions, intended
+    for use byoperators to manage cluster health vs application access. See CASSANDRA-12106
+    and CEP-13 for more details.Default Value: false'
+  name: partition_denylist_enabled
+- default_value: 'true'
+  description: 'This option is commented out by default.Default Value: true'
+  name: denylist_writes_enabled
+- default_value: 'true'
+  description: 'This option is commented out by default.Default Value: true'
+  name: denylist_reads_enabled
+- default_value: 'true'
+  description: 'This option is commented out by default.Default Value: true'
+  name: denylist_range_reads_enabled
+- default_value: 600s
+  description: 'This option is commented out by default.The interval at which keys
+    in the cache for denylisting will "expire" and async refresh from the backing
+    DB.Note: this serves only as a fail-safe, as the usage pattern is expected to
+    be "mutate state, refresh cache" on anychanges to the underlying denylist entries.
+    See documentation for details.Min unit: sDefault Value: 600s'
+  name: denylist_refresh
+- default_value: 5s
+  description: 'This option is commented out by default.In the event of errors on
+    attempting to load the denylist cache, retry on this interval.Min unit: sDefault
+    Value: 5s'
+  name: denylist_initial_load_retry
+- default_value: '1000'
+  description: 'This option is commented out by default.We cap the number of denylisted
+    keys allowed per table to keep things from growing unbounded. Nodes will warn
+    abovethis limit while allowing new denylisted keys to be inserted. Denied keys
+    are loaded in natural query / clusteringordering by partition key in case of overflow.Default
+    Value: 1000'
+  name: denylist_max_keys_per_table
+- default_value: '10000'
+  description: 'This option is commented out by default.We cap the total number of
+    denylisted keys allowed in the cluster to keep things from growing unbounded.Nodes
+    will warn on initial cache load that there are too many keys and be direct the
+    operator to trim down excessentries to within the configured limits.Default Value:
+    10000'
+  name: denylist_max_keys_total
+- default_value: QUORUM
+  description: "This option is commented out by default.Since the denylist in many\
+    \ ways serves to protect the health of the cluster from partitions operators have\
+    \ identifiedas being in a bad state, we usually want more robustness than just\
+    \ CL.ONE on operations to/from these tables toensure that these safeguards are\
+    \ in place. That said, we allow users to configure this if they\u2019re so inclined.Default\
+    \ Value: QUORUM"
+  name: denylist_consistency_level
+- default_value: '8'
+  description: 'This option is commented out by default.phi value that must be reached
+    for a host to be marked down.most users should never need to adjust this.Default
+    Value: 8'
+  name: phi_convict_threshold
+- default_value: SimpleSnitch
+  description: "endpoint_snitch\u2009\u2014\u2009Set this to a class that implementsIEndpointSnitch.\
+    \  The snitch has two functions:it teaches Cassandra enough about your network\
+    \ topology to routerequests efficientlyit allows Cassandra to spread replicas\
+    \ around your cluster to avoidcorrelated failures. It does this by grouping machines\
+    \ into\"datacenters\" and \"racks.\"  Cassandra will do its best not to havemore\
+    \ than one replica on the same \"rack\" (which may not actuallybe a physical location)CASSANDRA\
+    \ WILL NOT ALLOW YOU TO SWITCH TO AN INCOMPATIBLE SNITCHONCE DATA IS INSERTED\
+    \ INTO THE CLUSTER.  This would cause data loss.This means that if you start with\
+    \ the default SimpleSnitch, whichlocates every node on \"rack1\" in \"datacenter1\"\
+    , your only optionsif you need to add another datacenter are GossipingPropertyFileSnitch(and\
+    \ the older PFS).  From there, if you want to migrate to anincompatible snitch\
+    \ like Ec2Snitch you can do it by adding new nodesunder Ec2Snitch (which will\
+    \ locate them in a new \"datacenter\") anddecommissioning the old ones.Out of\
+    \ the box, Cassandra provides:SimpleSnitch:   Treats Strategy order as proximity.\
+    \ This can improve cache   locality when disabling read repair.  Only appropriate\
+    \ for   single-datacenter deployments.GossipingPropertyFileSnitch   This should\
+    \ be your go-to snitch for production use.  The rack   and datacenter for the\
+    \ local node are defined in   cassandra-rackdc.properties and propagated to other\
+    \ nodes via   gossip.  If cassandra-topology.properties exists, it is used as\
+    \ a   fallback, allowing migration from the PropertyFileSnitch.PropertyFileSnitch:\
+    \   Proximity is determined by rack and data center, which are   explicitly configured\
+    \ in cassandra-topology.properties.Ec2Snitch:   Appropriate for EC2 deployments\
+    \ in a single Region. Loads Region   and Availability Zone information from the\
+    \ EC2 API. The Region is   treated as the datacenter, and the Availability Zone\
+    \ as the rack.   Only private IPs are used, so this will not work across multiple\
+    \   Regions.Ec2MultiRegionSnitch:   Uses public IPs as broadcast_address to allow\
+    \ cross-region   connectivity.  (Thus, you should set seed addresses to the public\
+    \   IP as well.) You will need to open the storage_port or   ssl_storage_port\
+    \ on the public IP firewall.  (For intra-Region   traffic, Cassandra will switch\
+    \ to the private IP after   establishing a connection.)RackInferringSnitch:  \
+    \ Proximity is determined by rack and data center, which are   assumed to correspond\
+    \ to the 3rd and 2nd octet of each node\u2019s IP   address, respectively.  Unless\
+    \ this happens to match your   deployment conventions, this is best used as an\
+    \ example of   writing a custom Snitch class and is provided in that spirit.You\
+    \ can use a custom Snitch by setting this to the full class nameof the snitch,\
+    \ which will be assumed to be on your classpath.Default Value: SimpleSnitch"
+  name: endpoint_snitch
+- default_value: 100ms
+  description: 'controls how often to perform the more expensive part of host scorecalculationMin
+    unit: msDefault Value: 100ms'
+  name: dynamic_snitch_update_interval
+- default_value: 600000ms
+  description: 'controls how often to reset all host scores, allowing a bad host topossibly
+    recoverMin unit: msDefault Value: 600000ms'
+  name: dynamic_snitch_reset_interval
+- default_value: '1.0'
+  description: 'if set greater than zero, this will allow''pinning'' of replicas to
+    hosts in order to increase cache capacity.The badness threshold will control how
+    much worse the pinned host has to bebefore the dynamic snitch will prefer other
+    replicas over it.  This isexpressed as a double which represents a percentage.  Thus,
+    a value of0.2 means Cassandra would continue to prefer the static snitch valuesuntil
+    the pinned host was 20% worse than the fastest.Default Value: 1.0'
+  name: dynamic_snitch_badness_threshold
+- default_value: <UNKNOWN>
+  description: 'Configure server-to-server internode encryptionJVM and netty defaults
+    for supported SSL socket protocols and cipher suites canbe replaced using custom
+    encryption options. This is not recommendedunless you have policies in place that
+    dictate certain settings, orneed to disable vulnerable ciphers or protocols in
+    case the JVM cannotbe updated.FIPS compliant settings can be configured at JVM
+    level and should notinvolve changing encryption settings here:docs.oracle.com/javase/8/docs/technotes/guides/security/jsse/FIPS.htmlNOTE
+    this default configuration is an insecure configuration. If you need toenable
+    server-to-server encryption generate server keystores (and truststores for mutualauthentication)
+    per:download.oracle.com/javase/8/docs/technotes/guides/security/jsse/JSSERefGuide.html#CreateKeystoreThen
+    perform the following configuration changes:Step 1: Set internode_encryption=<dc|rack|all>
+    and explicitly set optional=true. Restart all nodesStep 2: Set optional=false
+    (or remove it) and if you generated truststores and want to use mutualauth set
+    require_client_auth=true. Restart all nodesDefault Value (complex option):      #
+    On outbound connections, determine which type of peers to securely connect to.      #   The
+    available options are :      #     none : Do not encrypt outgoing connections      #     dc   :
+    Encrypt connections to peers in other datacenters but not within datacenters      #     rack
+    : Encrypt connections to peers in other racks but not within racks      #     all  :
+    Always use encrypted connections      internode_encryption: none      # When set
+    to true, encrypted and unencrypted connections are allowed on the storage_port      #
+    This should _only be true_ while in unencrypted or transitional operation      #
+    optional defaults to true if internode_encryption is none      # optional: true      #
+    If enabled, will open up an encrypted listening socket on ssl_storage_port. Should
+    only be used      # during upgrade to 4.0; otherwise, set to false.      legacy_ssl_storage_port_enabled:
+    false      # Set to a valid keystore if internode_encryption is dc, rack or all      keystore:
+    conf/.keystore      keystore_password: cassandra      # Configure the way Cassandra
+    creates SSL contexts.      # To use PEM-based key material, see org.apache.cassandra.security.PEMBasedSslContextFactory      #
+    ssl_context_factory:      #     # Must be an instance of org.apache.cassandra.security.ISslContextFactory      #     class_name:
+    org.apache.cassandra.security.DefaultSslContextFactory      # Verify peer server
+    certificates      require_client_auth: false      # Set to a valid trustore if
+    require_client_auth is true      truststore: conf/.truststore      truststore_password:
+    cassandra      # Verify that the host name in the certificate matches the connected
+    host      require_endpoint_verification: false      # More advanced defaults:      #
+    protocol: TLS      # store_type: JKS      # cipher_suites: [      #   TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,
+    TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,      #   TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+    TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA,      #   TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA,
+    TLS_RSA_WITH_AES_128_GCM_SHA256, TLS_RSA_WITH_AES_128_CBC_SHA,      #   TLS_RSA_WITH_AES_256_CBC_SHA      #
+    ]'
+  name: server_encryption_options
+- default_value: <UNKNOWN>
+  description: 'Configure client-to-server encryption.NOTE this default configuration
+    is an insecure configuration. If you need toenable client-to-server encryption
+    generate server keystores (and truststores for mutualauthentication) per:download.oracle.com/javase/8/docs/technotes/guides/security/jsse/JSSERefGuide.html#CreateKeystoreThen
+    perform the following configuration changes:Step 1: Set enabled=true and explicitly
+    set optional=true. Restart all nodesStep 2: Set optional=false (or remove it)
+    and if you generated truststores and want to use mutualauth set require_client_auth=true.
+    Restart all nodesDefault Value (complex option):      # Enable client-to-server
+    encryption      enabled: false      # When set to true, encrypted and unencrypted
+    connections are allowed on the native_transport_port      # This should _only
+    be true_ while in unencrypted or transitional operation      # optional defaults
+    to true when enabled is false, and false when enabled is true.      # optional:
+    true      # Set keystore and keystore_password to valid keystores if enabled is
+    true      keystore: conf/.keystore      keystore_password: cassandra      # Configure
+    the way Cassandra creates SSL contexts.      # To use PEM-based key material,
+    see org.apache.cassandra.security.PEMBasedSslContextFactory      # ssl_context_factory:      #     #
+    Must be an instance of org.apache.cassandra.security.ISslContextFactory      #     class_name:
+    org.apache.cassandra.security.DefaultSslContextFactory      # Verify client certificates      require_client_auth:
+    false      # Set trustore and truststore_password if require_client_auth is true      #
+    truststore: conf/.truststore      # truststore_password: cassandra      # More
+    advanced defaults:      # protocol: TLS      # store_type: JKS      # cipher_suites:
+    [      #   TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,      #   TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+    TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA,      #   TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA,
+    TLS_RSA_WITH_AES_128_GCM_SHA256, TLS_RSA_WITH_AES_128_CBC_SHA,      #   TLS_RSA_WITH_AES_256_CBC_SHA      #
+    ]'
+  name: client_encryption_options
+- default_value: dc
+  description: 'internode_compression controls whether traffic between nodes iscompressed.Can
+    be:all  all traffic is compresseddc  traffic between different datacenters is
+    compressednone  nothing is compressed.Default Value: dc'
+  name: internode_compression
+- default_value: 'false'
+  description: 'Enable or disable tcp_nodelay for inter-dc communication.Disabling
+    it will result in larger (but fewer) network packets being sent,reducing overhead
+    from the TCP protocol itself, at the cost of increasinglatency if you block for
+    cross-datacenter responses.Default Value: false'
+  name: inter_dc_tcp_nodelay
+- default_value: 1d
+  description: 'TTL for different trace types used during logging of the repair process.Min
+    unit: sDefault Value: 1d'
+  name: trace_type_query_ttl
+- default_value: 7d
+  description: 'Min unit: sDefault Value: 7d'
+  name: trace_type_repair_ttl
+- default_value: 'false'
+  description: 'If unset, all GC Pauses greater than gc_log_threshold will log atINFO
+    levelUDFs (user defined functions) are disabled by default.As of Cassandra 3.0
+    there is a sandbox in place that should prevent execution of evil code.Default
+    Value: false'
+  name: user_defined_functions_enabled
+- default_value: 'false'
+  description: 'Enables scripted UDFs (JavaScript UDFs).Java UDFs are always enabled,
+    if user_defined_functions_enabled is true.Enable this option to be able to use
+    UDFs with "language javascript" or any custom JSR-223 provider.This option has
+    no effect, if user_defined_functions_enabled is false.Default Value: false'
+  name: scripted_user_defined_functions_enabled
+- default_value: <UNKNOWN>
+  description: 'Enables encrypting data at-rest (on disk). Different key providers
+    can be plugged in, but the default reads froma JCE-style keystore. A single keystore
+    can hold multiple keys, but the one referenced bythe "key_alias" is the only key
+    that will be used for encrypt opertaions; previously used keyscan still (and should!)
+    be in the keystore and will be used on decrypt operations(to handle the case of
+    key rotation).It is strongly recommended to download and install Java Cryptography
+    Extension (JCE)Unlimited Strength Jurisdiction Policy Files for your version of
+    the JDK.(current link: www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html)Currently,
+    only the following file types are supported for transparent data encryption, althoughmore
+    are coming in future cassandra releases: commitlog, hintsDefault Value (complex
+    option):      enabled: false      chunk_length_kb: 64      cipher: AES/CBC/PKCS5Padding      key_alias:
+    testing:1      # CBC IV length for AES needs to be 16 bytes (which is also the
+    default size)      # iv_length: 16      key_provider:        - class_name: org.apache.cassandra.security.JKSKeyProvider          parameters:            -
+    keystore: conf/.keystore              keystore_password: cassandra              store_type:
+    JCEKS              key_password: cassandra'
+  name: transparent_data_encryption_options
+- default_value: '1000'
+  description: 'SAFETY THRESHOLDS #When executing a scan, within or across a partition,
+    we need to keep thetombstones seen in memory so we can return them to the coordinator,
+    whichwill use them to make sure other replicas also know about the deleted rows.With
+    workloads that generate a lot of tombstones, this can cause performanceproblems
+    and even exaust the server heap.(www.datastax.com/dev/blog/cassandra-anti-patterns-queues-and-queue-like-datasets)Adjust
+    the thresholds here if you understand the dangers and want toscan more tombstones
+    anyway.  These thresholds may also be adjusted at runtimeusing the StorageService
+    mbean.Default Value: 1000'
+  name: tombstone_warn_threshold
+- default_value: '100000'
+  description: 'Default Value: 100000'
+  name: tombstone_failure_threshold
+- default_value: <UNKNOWN>
+  description: Filtering and secondary index queries at read consistency levels above
+    ONE/LOCAL_ONE use amechanism called replica filtering protection to ensure that
+    results from stale replicas donot violate consistency. (See CASSANDRA-8272 and
+    CASSANDRA-15907 for more details.) Thismechanism materializes replica results
+    by partition on-heap at the coordinator. The more possiblystale results returned
+    by the replicas, the more rows materialized during the query.
+  name: replica_filtering_protection
+- default_value: 5KiB
+  description: 'Log WARN on any multiple-partition batch size exceeding this value.
+    5KiB per batch by default.Caution should be taken on increasing the size of this
+    threshold as it can lead to node instability.Min unit: KiBDefault Value: 5KiB'
+  name: batch_size_warn_threshold
+- default_value: 50KiB
+  description: 'Fail any multiple-partition batch exceeding this value. 50KiB (10x
+    warn threshold) by default.Min unit: KiBDefault Value: 50KiB'
+  name: batch_size_fail_threshold
+- default_value: '10'
+  description: 'Log WARN on any batches not of type LOGGED than span across more partitions
+    than this limitDefault Value: 10'
+  name: unlogged_batch_across_partitions_warn_threshold
+- default_value: 100MiB
+  description: 'Log a warning when compacting partitions larger than this valueDefault
+    Value: 100MiB'
+  name: compaction_large_partition_warning_threshold
+- default_value: '100000'
+  description: 'Log a warning when writing more tombstones than this value to a partitionDefault
+    Value: 100000'
+  name: compaction_tombstone_warning_threshold
+- default_value: 200ms
+  description: 'This option is commented out by default.GC Pauses greater than 200
+    ms will be logged at INFO levelThis threshold can be adjusted to minimize logging
+    if necessaryMin unit: msDefault Value: 200ms'
+  name: gc_log_threshold
+- default_value: 1000ms
+  description: 'This option is commented out by default.GC Pauses greater than gc_warn_threshold
+    will be logged at WARN levelAdjust the threshold based on your application throughput
+    requirement. Setting to 0will deactivate the feature.Min unit: msDefault Value:
+    1000ms'
+  name: gc_warn_threshold
+- default_value: 256MiB
+  description: 'This option is commented out by default.Maximum size of any value
+    in SSTables. Safety measure to detect SSTable corruptionearly. Any value size
+    larger than this threshold will result into marking an SSTableas corrupted. This
+    should be positive and less than 2GiB.Min unit: MiBDefault Value: 256MiB'
+  name: max_value_size
+- default_value: '1'
+  description: 'This option is commented out by default.Impact on keyspace creation
+    **If replication factor is not mentioned as part of keyspace creation, default_keyspace_rf
+    would apply.Changing this configuration would only take effect for keyspaces created
+    after the change, but does not impactexisting keyspaces created prior to the change.Impact
+    on keyspace alter **When altering a keyspace from NetworkTopologyStrategy to SimpleStrategy,
+    default_keyspace_rf is applied if rf is notexplicitly mentioned.Impact on system
+    keyspaces **This would also apply for any system keyspaces that need replication
+    factor.A further note about system keyspaces - system_traces and system_distributed
+    keyspaces take RF of 2 or default,whichever is higher, and system_auth keyspace
+    takes RF of 1 or default, whichever is higher.Suggested value for use in production:
+    3Default Value: 1'
+  name: default_keyspace_rf
+- default_value: EACH_QUORUM
+  description: 'This option is commented out by default.Track a metric per keyspace
+    indicating whether replication achieved the ideal consistencylevel for writes
+    without timing out. This is different from the consistency level requested byeach
+    write which may be lower in order to facilitate availability.Default Value: EACH_QUORUM'
+  name: ideal_consistency_level
+- default_value: 'false'
+  description: 'This option is commented out by default.Automatically upgrade sstables
+    after upgrade - if there is no ordinary compaction to do, theoldest non-upgraded
+    sstable will get upgraded to the latest versionDefault Value: false'
+  name: automatic_sstable_upgrade
+- default_value: '1'
+  description: 'This option is commented out by default.Limit the number of concurrent
+    sstable upgradesDefault Value: 1'
+  name: max_concurrent_automatic_sstable_upgrades
+- default_value: <UNKNOWN>
+  description: Audit logging - Logs every incoming CQL command request, authentication
+    to a node. See the docson audit_logging for full details about the various configuration
+    options.
+  name: audit_logging_options
+- default_value: <UNKNOWN>
+  description: This option is commented out by default.default options for full query
+    logging - these can be overridden from command line when executingnodetool enablefullquerylog
+  name: full_query_logging_options
+- default_value: disabled
+  description: 'This option is commented out by default.validate tombstones on reads
+    and compactioncan be either "disabled", "warn" or "exception"Default Value: disabled'
+  name: corrupted_tombstone_strategy
+- default_value: 'false'
+  description: 'Diagnostic Events #If enabled, diagnostic events can be helpful for
+    troubleshooting operational issues. Emitted events contain detailson internal
+    state and temporal relationships across events, accessible by clients via JMX.Default
+    Value: false'
+  name: diagnostic_events_enabled
+- default_value: 'false'
+  description: 'This option is commented out by default.Use native transport TCP message
+    coalescing. If on upgrade to 4.0 you found your throughput decreasing, and inparticular
+    you run an old kernel or have very fewer client connections, this option might
+    be worth evaluating.Default Value: false'
+  name: native_transport_flush_in_batches_legacy
+- default_value: 'false'
+  description: "Enable tracking of repaired state of data during reads and comparison\
+    \ between replicasMismatches between the repaired sets of replicas can be characterized\
+    \ as either confirmedor unconfirmed. In this context, unconfirmed indicates that\
+    \ the presence of pending repairsessions, unrepaired partition tombstones, or\
+    \ some other condition means that the disparitycannot be considered conclusive.\
+    \ Confirmed mismatches should be a trigger for investigationas they may be indicative\
+    \ of corruption or data loss.There are separate flags for range vs partition reads\
+    \ as single partition reads are only trackedwhen CL > 1 and a digest mismatch\
+    \ occurs. Currently, range queries don\u2019t use digests so ifenabled for range\
+    \ reads, all range reads will include repaired data tracking. As this addssome\
+    \ overhead, operators may wish to disable it whilst still enabling it for partition\
+    \ readsDefault Value: false"
+  name: repaired_data_tracking_for_range_reads_enabled
+- default_value: 'false'
+  description: 'Default Value: false'
+  name: repaired_data_tracking_for_partition_reads_enabled
+- default_value: 'false'
+  description: 'If false, only confirmed mismatches will be reported. If true, a separate
+    metric for unconfirmedmismatches will also be recorded. This is to avoid potential
+    signal:noise issues are unconfirmedmismatches are less actionable than confirmed
+    ones.Default Value: false'
+  name: report_unconfirmed_repaired_data_mismatches
+- default_value: '150'
+  description: 'This option is commented out by default.Having many tables and/or
+    keyspaces negatively affects performance of many operations in thecluster. When
+    the number of tables/keyspaces in the cluster exceeds the following thresholdsa
+    client warning will be sent back to the user when creating a table or keyspace.As
+    of cassandra 4.1, these properties are deprecated in favor of keyspaces_warn_threshold
+    and tables_warn_thresholdDefault Value: 150'
+  name: table_count_warn_threshold
+- default_value: '40'
+  description: 'This option is commented out by default.Default Value: 40'
+  name: keyspace_count_warn_threshold
+- default_value: LOCAL_QUORUM
+  description: 'This option is commented out by default.configure the read and write
+    consistency levels for modifications to auth tablesDefault Value: LOCAL_QUORUM'
+  name: auth_read_consistency_level
+- default_value: EACH_QUORUM
+  description: 'This option is commented out by default.Default Value: EACH_QUORUM'
+  name: auth_write_consistency_level
+- default_value: 'false'
+  description: 'This option is commented out by default.Delays on auth resolution
+    can lead to a thundering herd problem on reconnects; this option will enablewarming
+    of auth caches prior to node completing startup. See CASSANDRA-16958Default Value:
+    false'
+  name: auth_cache_warming_enabled
+- default_value: 'false'
+  description: '#EXPERIMENTAL FEATURES ##Enables materialized view creation on this
+    node.Materialized views are considered experimental and are not recommended for
+    production use.Default Value: false'
+  name: materialized_views_enabled
+- default_value: 'false'
+  description: 'Enables SASI index creation on this node.SASI indexes are considered
+    experimental and are not recommended for production use.Default Value: false'
+  name: sasi_indexes_enabled
+- default_value: 'false'
+  description: 'Enables creation of transiently replicated keyspaces on this node.Transient
+    replication is experimental and is not recommended for production use.Default
+    Value: false'
+  name: transient_replication_enabled
+- default_value: 'false'
+  description: "Enables the used of 'ALTER \u2026\u200B DROP COMPACT STORAGE' statements\
+    \ on this node.'ALTER \u2026\u200B DROP COMPACT STORAGE' is considered experimental\
+    \ and is not recommended for production use.Default Value: false"
+  name: drop_compact_storage_enabled
+- default_value: 'true'
+  description: 'This option is commented out by default.Whether or not USE <keyspace>
+    is allowed. This is enabled by default to avoid failure on upgrade.Default Value:
+    true'
+  name: use_statements_enabled
+- default_value: <UNKNOWN>
+  description: This option is commented out by default.When the client triggers a
+    protocol exception or unknown issue (Cassandra bug) we incrementa client metric
+    showing this; this logic will exclude specific subnets from updating thesemetrics
+  name: client_error_reporting_exclusions
+- default_value: 'false # scheduled to be set true in 4.2'
+  description: 'This option is commented out by default. subnets:   - 127.0.0.1   -
+    127.0.0.0/31Enables read thresholds (warn/fail) across all replicas for reporting
+    back to the client.See: CASSANDRA-16850Default Value: false # scheduled to be
+    set true in 4.2'
+  name: read_thresholds_enabled
+- default_value: <UNKNOWN>
+  description: 'This option is commented out by default.When read_thresholds_enabled:
+    true, this tracks the materialized size of a query on thecoordinator. If coordinator_read_size_warn_threshold
+    is defined, this will emit a warningto clients with details on what query triggered
+    this as well as the size of the result set; ifcoordinator_read_size_fail_threshold
+    is defined, this will fail the query after ithas exceeded this threshold, returning
+    a read error to the user.'
+  name: coordinator_read_size_warn_threshold
+- default_value: <UNKNOWN>
+  description: This option is commented out by default.
+  name: coordinator_read_size_fail_threshold
+- default_value: <UNKNOWN>
+  description: 'This option is commented out by default.When read_thresholds_enabled:
+    true, this tracks the size of the local read (as defined byheap size), and will
+    warn/fail based off these thresholds; undefined disables these checks.'
+  name: local_read_size_warn_threshold
+- default_value: <UNKNOWN>
+  description: This option is commented out by default.
+  name: local_read_size_fail_threshold
+- default_value: <UNKNOWN>
+  description: 'This option is commented out by default.When read_thresholds_enabled:
+    true, this tracks the expected memory size of the RowIndexEntryand will warn/fail
+    based off these thresholds; undefined disables these checks'
+  name: row_index_read_size_warn_threshold
+- default_value: <UNKNOWN>
+  description: This option is commented out by default.
+  name: row_index_read_size_fail_threshold
+- default_value: '-1'
+  description: 'This option is commented out by default.Guardrail to warn or fail
+    when creating more user keyspaces than threshold.The two thresholds default to
+    -1 to disable.Default Value: -1'
+  name: keyspaces_warn_threshold
+- default_value: '-1'
+  description: 'This option is commented out by default.Default Value: -1'
+  name: keyspaces_fail_threshold
+- default_value: '-1'
+  description: 'This option is commented out by default.Guardrail to warn or fail
+    when creating more user tables than threshold.The two thresholds default to -1
+    to disable.Default Value: -1'
+  name: tables_warn_threshold
+- default_value: '-1'
+  description: 'This option is commented out by default.Default Value: -1'
+  name: tables_fail_threshold
+- default_value: 'true'
+  description: 'This option is commented out by default.Guardrail to enable or disable
+    the ability to create uncompressed tablesDefault Value: true'
+  name: uncompressed_tables_enabled
+- default_value: '-1'
+  description: 'This option is commented out by default.Guardrail to warn or fail
+    when creating/altering a table with more columns per table than threshold.The
+    two thresholds default to -1 to disable.Default Value: -1'
+  name: columns_per_table_warn_threshold
+- default_value: '-1'
+  description: 'This option is commented out by default.Default Value: -1'
+  name: columns_per_table_fail_threshold
+- default_value: '-1'
+  description: 'This option is commented out by default.Guardrail to warn or fail
+    when creating more secondary indexes per table than threshold.The two thresholds
+    default to -1 to disable.Default Value: -1'
+  name: secondary_indexes_per_table_warn_threshold
+- default_value: '-1'
+  description: 'This option is commented out by default.Default Value: -1'
+  name: secondary_indexes_per_table_fail_threshold
+- default_value: 'true'
+  description: 'This option is commented out by default.Guardrail to enable or disable
+    the creation of secondary indexesDefault Value: true'
+  name: secondary_indexes_enabled
+- default_value: '-1'
+  description: 'This option is commented out by default.Guardrail to warn or fail
+    when creating more materialized views per table than threshold.The two thresholds
+    default to -1 to disable.Default Value: -1'
+  name: materialized_views_per_table_warn_threshold
+- default_value: '-1'
+  description: 'This option is commented out by default.Default Value: -1'
+  name: materialized_views_per_table_fail_threshold
+- default_value: '[]'
+  description: 'This option is commented out by default.Guardrail to warn about, ignore
+    or reject properties when creating tables. By default all properties are allowed.Default
+    Value: []'
+  name: table_properties_warned
+- default_value: '[]'
+  description: 'This option is commented out by default.Default Value: []'
+  name: table_properties_ignored
+- default_value: '[]'
+  description: 'This option is commented out by default.Default Value: []'
+  name: table_properties_disallowed
+- default_value: 'true'
+  description: 'This option is commented out by default.Guardrail to allow/disallow
+    user-provided timestamps. Defaults to true.Default Value: true'
+  name: user_timestamps_enabled
+- default_value: 'true'
+  description: 'This option is commented out by default.Guardrail to allow/disallow
+    GROUP BY functionality.Default Value: true'
+  name: group_by_enabled
+- default_value: 'true'
+  description: 'This option is commented out by default.Guardrail to allow/disallow
+    TRUNCATE and DROP TABLE statementsDefault Value: true'
+  name: drop_truncate_table_enabled
+- default_value: '-1'
+  description: 'This option is commented out by default.Guardrail to warn or fail
+    when using a page size greater than threshold.The two thresholds default to -1
+    to disable.Default Value: -1'
+  name: page_size_warn_threshold
+- default_value: '-1'
+  description: 'This option is commented out by default.Default Value: -1'
+  name: page_size_fail_threshold
+- default_value: 'true'
+  description: 'This option is commented out by default.Guardrail to allow/disallow
+    list operations that require read before write, i.e. setting list element by index
+    andremoving list elements by either index or value. Defaults to true.Default Value:
+    true'
+  name: read_before_write_list_operations_enabled
+- default_value: '-1'
+  description: 'This option is commented out by default.Guardrail to warn or fail
+    when querying with an IN restriction selecting more partition keys than threshold.The
+    two thresholds default to -1 to disable.Default Value: -1'
+  name: partition_keys_in_select_warn_threshold
+- default_value: '-1'
+  description: 'This option is commented out by default.Default Value: -1'
+  name: partition_keys_in_select_fail_threshold
+- default_value: '-1'
+  description: "This option is commented out by default.Guardrail to warn or fail\
+    \ when an IN query creates a cartesian product with a size exceeding threshold,eg.\
+    \ \"a in (1,2,\u2026\u200B10) and b in (1,2\u2026\u200B10)\" results in cartesian\
+    \ product of 100.The two thresholds default to -1 to disable.Default Value: -1"
+  name: in_select_cartesian_product_warn_threshold
+- default_value: '-1'
+  description: 'This option is commented out by default.Default Value: -1'
+  name: in_select_cartesian_product_fail_threshold
+- default_value: '[]'
+  description: 'This option is commented out by default.Guardrail to warn about or
+    reject read consistency levels. By default, all consistency levels are allowed.Default
+    Value: []'
+  name: read_consistency_levels_warned
+- default_value: '[]'
+  description: 'This option is commented out by default.Default Value: []'
+  name: read_consistency_levels_disallowed
+- default_value: '[]'
+  description: 'This option is commented out by default.Guardrail to warn about or
+    reject write consistency levels. By default, all consistency levels are allowed.Default
+    Value: []'
+  name: write_consistency_levels_warned
+- default_value: '[]'
+  description: 'This option is commented out by default.Default Value: []'
+  name: write_consistency_levels_disallowed
+- default_value: <UNKNOWN>
+  description: 'This option is commented out by default.Guardrail to warn or fail
+    when encountering larger size of collection data than threshold.At query time
+    this guardrail is applied only to the collection fragment that is being writen,
+    even though in the caseof non-frozen collections there could be unaccounted parts
+    of the collection on the sstables. This is done this way toprevent read-before-write.
+    The guardrail is also checked at sstable write time to detect large non-frozen
+    collections,although in that case exceeding the fail threshold will only log an
+    error message, without interrupting the operation.The two thresholds default to
+    null to disable.Min unit: B'
+  name: collection_size_warn_threshold
+- default_value: <UNKNOWN>
+  description: 'This option is commented out by default.Min unit: B'
+  name: collection_size_fail_threshold
+- default_value: '-1'
+  description: 'This option is commented out by default.Guardrail to warn or fail
+    when encountering more elements in collection than threshold.At query time this
+    guardrail is applied only to the collection fragment that is being writen, even
+    though in the caseof non-frozen collections there could be unaccounted parts of
+    the collection on the sstables. This is done this way toprevent read-before-write.
+    The guardrail is also checked at sstable write time to detect large non-frozen
+    collections,although in that case exceeding the fail threshold will only log an
+    error message, without interrupting the operation.The two thresholds default to
+    -1 to disable.Default Value: -1'
+  name: items_per_collection_warn_threshold
+- default_value: '-1'
+  description: 'This option is commented out by default.Default Value: -1'
+  name: items_per_collection_fail_threshold
+- default_value: 'true'
+  description: 'This option is commented out by default.Guardrail to allow/disallow
+    querying with ALLOW FILTERING. Defaults to true.Default Value: true'
+  name: allow_filtering_enabled
+- default_value: '-1'
+  description: 'This option is commented out by default.Guardrail to warn or fail
+    when creating a user-defined-type with more fields in than threshold.Default -1
+    to disable.Default Value: -1'
+  name: fields_per_udt_warn_threshold
+- default_value: '-1'
+  description: 'This option is commented out by default.Default Value: -1'
+  name: fields_per_udt_fail_threshold
+- default_value: '-1'
+  description: "This option is commented out by default.Guardrail to warn or fail\
+    \ when local data disk usage percentage exceeds threshold. Valid values are in\
+    \ [1, 100].This is only used for the disks storing data directories, so it won\u2019\
+    t count any separate disks used for storingthe commitlog, hints nor saved caches.\
+    \ The disk usage is the ratio between the amount of space used by the datadirectories\
+    \ and the addition of that same space and the remaining free space on disk. The\
+    \ main purpose of thisguardrail is rejecting user writes when the disks are over\
+    \ the defined usage percentage, so the writes done bybackground processes such\
+    \ as compaction and streaming don\u2019t fail due to a full disk. The limits should\
+    \ be definedaccordingly to the expected data growth due to those background processes,\
+    \ so for example a compaction strategydoubling the size of the data would require\
+    \ to keep the disk usage under 50%.The two thresholds default to -1 to disable.Default\
+    \ Value: -1"
+  name: data_disk_usage_percentage_warn_threshold
+- default_value: '-1'
+  description: 'This option is commented out by default.Default Value: -1'
+  name: data_disk_usage_percentage_fail_threshold
+- default_value: <UNKNOWN>
+  description: "This option is commented out by default.Allows defining the max disk\
+    \ size of the data directories when calculating thresholds fordisk_usage_percentage_warn_threshold\
+    \ and disk_usage_percentage_fail_threshold, so if this is greater than zero theybecome\
+    \ percentages of a fixed size on disk instead of percentages of the physically\
+    \ available disk size. This shouldbe useful when we have a large disk and we only\
+    \ want to use a part of it for Cassandra\u2019s data directories.Valid values\
+    \ are in [1, max available disk size of all data directories].Defaults to null\
+    \ to disable and use the physically available disk size of data directories during\
+    \ calculations.Min unit: B"
+  name: data_disk_usage_max_disk_size
+- default_value: '-1'
+  description: 'This option is commented out by default.Guardrail to warn or fail
+    when the minimum replication factor is lesser than threshold.This would also apply
+    to system keyspaces.Suggested value for use in production: 2 or higherDefault
+    Value: -1'
+  name: minimum_replication_factor_warn_threshold
+- default_value: '-1'
+  description: 'This option is commented out by default.Default Value: -1'
+  name: minimum_replication_factor_fail_threshold
+- default_value: <UNKNOWN>
+  description: 'This option is commented out by default.Startup Checks are executed
+    as part of Cassandra startup process, not all of themare configurable (so you
+    can disable them) but these which are enumerated bellow.Uncomment the startup
+    checks and configure them appropriately to cover your needs.Default Value (complex
+    option):    # Verifies correct ownership of attached locations on disk at startup.
+    See CASSANDRA-16879 for more details.    #  check_filesystem_ownership:    #    enabled:
+    false    #    ownership_token: "sometoken" # (overriden by "CassandraOwnershipToken"
+    system property)    #    ownership_filename: ".cassandra_fs_ownership" # (overriden
+    by "cassandra.fs_ownership_filename")    # Prevents a node from starting if snitch''s
+    data center differs from previous data center.    #  check_dc:    #    enabled:
+    true # (overriden by cassandra.ignore_dc system property)    # Prevents a node
+    from starting if snitch''s rack differs from previous rack.    #  check_rack:    #    enabled:
+    true # (overriden by cassandra.ignore_rack system property)    # Enable this property
+    to fail startup if the node is down for longer than gc_grace_seconds, to potentially    #
+    prevent data resurrection on tables with deletes. By default, this will run against
+    all keyspaces and tables    # except the ones specified on excluded_keyspaces
+    and excluded_tables.    #  check_data_resurrection:    #    enabled: false    #
+    file where Cassandra periodically writes the last time it was known to run    #    heartbeat_file:
+    /var/lib/cassandra/data/cassandra-heartbeat    #    excluded_keyspaces: # comma
+    separated list of keyspaces to exclude from the check    #    excluded_tables:
+    # comma separated list of keyspace.table pairs to exclude from the check'
+  name: startup_checks

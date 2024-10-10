@@ -1,0 +1,74 @@
+cassandra:
+  rules: |
+    Based on the given descriptions, deduce the types of the described variables. Your answers should only contain the type name and nothing else.
+    Acceptable types include "boolean", "integer", "float", "string", "enum", "rString", "hostname", "port", "path", "size", "time", "object", "array" and "unknown".
+    For "enum", list all legitimate options separated by the character "|" in angle brackets, e.g. "enum<A|B>". Always prefer "boolean" over "enum" if the only options are true and false.
+    For "time" and "size", put the unit in angle brackets, e.g. "time<ms>" or "size<MiB>".
+    "rString" means string where some limitations apply.
+    For arrays, put the type of elements in angle brackets, e.g. "array<integer>" or "array<enum<A|B>>".
+    Use "unknown" when you are not 100% sure. Do not randomly guess, just say "unknown" when you are not 100% sure.
+    Anything more complex is considered an "object".
+    You may use your previous responses to help with current tasks. For example, you may believe that a variable named "coordinator_read_size_fail_threshold" has the same type as "coordinator_read_size_warn_threshold".
+  examples:
+    - task: |
+        The name of the cluster. This is mainly used to prevent machines in one logical cluster from joining another.
+        Default Value: 'Test Cluster'
+      answer: "string"
+    - task: |
+        Network authorization backend, implementing INetworkAuthorizer; used to restrict user access to certain DCs Out of the box, Cassandra provides org.apache.cassandra.auth.{AllowAllNetworkAuthorizer, CassandraNetworkAuthorizer}.
+        AllowAllAuthorizer allows any action to any user - set it to disable authorization.
+        CassandraAuthorizer stores permissions in system_auth.role_permissions table. Please increase system_auth keyspace replication factor if you use this authorizer.
+        Default Value: AllowAllAuthorizer
+      answer: "enum<AllowAllNetworkAuthorizer|CassandraNetworkAuthorizer>"
+    - task: |
+        This option is commented out by default.
+        Depending on the auth strategy of the cluster, it can be beneficial to iterate from root to table (root → ks → table) instead of table to root (table → ks → root). As the auth entries are whitelisting, once a permission is found you know it to be valid. We default to false as the legacy behavior is to query at the table level then move back up to the root. See CASSANDRA-17016 for details.
+        Default Value: false
+      answer: "boolean"
+    - task: |
+        commitlog_sync may be either "periodic", "group", or "batch."
+        When in batch mode, Cassandra won’t ack writes until the commit log has been flushed to disk. Each incoming write will trigger the flush task. commitlog_sync_batch_window_in_ms is a deprecated value. Previously it had almost no value, and is being removed.
+        Default Value: 2
+      answer: "integer"
+    - task: |
+        Min unit: ms
+        Default Value: 10000ms
+      answer: "time<ms>"
+    - task: |
+        This option is commented out by default.
+        Total space to use for commit logs on disk.
+        If space gets above this value, Cassandra will flush every dirty CF in the oldest segment and remove it. So a small total commitlog space will tend to cause more flush activity on less-active columnfamilies.
+        The default value is the smaller of 8192, and 1/4 of the total space of the commitlog volume.
+        Default Value: 8192MiB
+      answer: "size<MiB>"
+    - task: |
+        CommitLogSegments are moved to this directory on flush if cdc_enabled: true and the segment contains mutations for a CDC-enabled table. This should be placed on a separate spindle than the data directories. If not set, the default directory is $CASSANDRA_HOME/data/cdc_raw.
+        Default Value: /var/lib/cassandra/cdc_raw
+      answer: "path"
+    - task: |
+        Address or interface to bind to and tell other Cassandra nodes to connect to. You must change this if you want multiple nodes to be able to communicate!
+        Set listen_address OR listen_interface, not both.
+        Leaving it blank leaves it up to InetAddress.getLocalHost(). This will always do the Right Thing if the node is properly configured (hostname, name resolution, etc), and the Right Thing is to use the address associated with the hostname (it might not be). If unresolvable it will fall back to InetAddress.getLoopbackAddress(), which is wrong for production systems.
+        Setting listen_address to 0.0.0.0 is always wrong.
+        Default Value: localhost
+      answer: "hostname"
+    - task: |
+        port for the CQL native transport to listen for clients on For security reasons, you should not expose this port to the internet. Firewall it if needed.
+        Default Value: 9042
+      answer: "port"
+    - task: |
+        This option is commented out by default.
+        default options for full query logging - these can be overridden from command line when executing nodetool enablefullquerylog
+      answer: "unknown"
+    - task: |
+        Set listen_address OR listen_interface, not both. Interfaces must correspond to a single address, IP aliasing is not supported.
+        Default Value: eth0
+      answer: "rString"
+    - task: |
+        When hinted_handoff_enabled is true, a black list of data centers that will not perform hinted handoff
+        Default Value (complex option):
+            #    - DC1
+            #    - DC2
+      answer: "object"
+    - task: |
+
