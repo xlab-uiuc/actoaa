@@ -8,13 +8,13 @@ metadata:
 spec:
   group: cassandra.datastax.com
   names:
-    kind: CassandraDatacenter
-    listKind: CassandraDatacenterList
-    plural: cassandradatacenters
+    kind: XCassandraDatacenter
+    listKind: XCassandraDatacenterList
+    plural: xcassandradatacenters
     shortNames:
-    - cassdc
-    - cassdcs
-    singular: cassandradatacenter
+    - xcassdc
+    - xcassdcs
+    singular: xcassandradatacenter
   scope: Namespaced
   versions:
   - name: v1beta1

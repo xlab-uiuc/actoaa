@@ -100,6 +100,13 @@ crd["spec"]["versions"][0]["schema"]["openAPIV3Schema"]["properties"]["spec"]["p
 }
 
 crd["metadata"]["name"] = "cassandradatacenterxs.cassandra.datastax.com"
+crd["spec"]["names"] = {
+    "kind": "XCassandraDatacenter",
+    "listKind": "XCassandraDatacenterList",
+    "plural": "xcassandradatacenters",
+    "shortNames": ["xcassdc", "xcassdcs"],
+    "singular": "xcassandradatacenter"
+}
 
 with open(OUTPUT, "w") as f:
     yaml.dump(crd, f)
