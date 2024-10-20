@@ -1,6 +1,3 @@
 [submodule "acto"]
 	path = acto
-	url = uiuc.github:xlab-uiuc/acto
-[submodule "cass-operator/acto"]
-	path = cass-operator/acto
-	url = uiuc.github:xlab-uiuc/acto
+	url = uiuc.github:SleepyLeslie/acto
