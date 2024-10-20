@@ -134,7 +134,7 @@
     passwords in system_auth.roles table.Please increase system_auth keyspace replication
     factor if you use this authenticator.If using PasswordAuthenticator, CassandraRoleManager
     must also be used (see below)Default Value: AllowAllAuthenticator'
-  guessed_type: enum<LZ4|Snappy|Deflate|None>
+  guessed_type: enum<AllowAllAuthenticator|PasswordAuthentiator>
   name: authenticator
 - default_value: AllowAllAuthorizer
   description: 'Authorization backend, implementing IAuthorizer; used to limit access/provide
