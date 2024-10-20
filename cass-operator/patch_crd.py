@@ -99,7 +99,7 @@ crd["spec"]["versions"][0]["schema"]["openAPIV3Schema"]["properties"]["spec"]["p
     }
 }
 
-crd["metadata"]["name"] = "cassandradatacenterxs.cassandra.datastax.com"
+crd["metadata"]["name"] = "xcassandradatacenters.cassandra.datastax.com"
 crd["spec"]["names"] = {
     "kind": "XCassandraDatacenter",
     "listKind": "XCassandraDatacenterList",

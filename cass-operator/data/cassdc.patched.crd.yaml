@@ -4,7 +4,7 @@ metadata:
   annotations:
     cert-manager.io/inject-ca-from: cass-operator/cass-operator-serving-cert
     controller-gen.kubebuilder.io/version: v0.15.0
-  name: cassandradatacenterxs.cassandra.datastax.com
+  name: xcassandradatacenters.cassandra.datastax.com
 spec:
   group: cassandra.datastax.com
   names:
