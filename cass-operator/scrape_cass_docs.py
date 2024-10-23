@@ -4,13 +4,13 @@ import requests
 from bs4 import BeautifulSoup
 
 SOURCE = "https://cassandra.apache.org/doc/stable/cassandra/configuration/cass_yaml_file.html"
-INPUT = "cassandra-yaml.yaml"
-OUTPUT = "cassandra-parsed.yaml"
+OUTPUT = "data/cassandra-yaml.yaml"
 
 resp = requests.get(SOURCE)
 page = resp.text
 soup = BeautifulSoup(page, "html.parser")
-article = soup.find("article", class_="doc")
+
+article = soup.find("div", class_="doc")
 sects = article.find_all("div", class_="sect1")
 
 items = []
@@ -31,5 +31,5 @@ for sect in sects:
         "description": description
     })
 
-with open("cassandra-yaml.yaml", "w") as fp:
+with open(OUTPUT, "w") as fp:
     yaml.dump(items, fp)
