@@ -4,7 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 
 SOURCE = "https://mariadb.com/kb/en/server-system-variables/#list-of-server-system-variables"
-OUTPUT = "data/mariadb-schema.yaml"
+OUTPUT = "data/mariadb-docs.yaml"
 
 resp = requests.get(SOURCE)
 page = resp.text

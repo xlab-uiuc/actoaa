@@ -23,7 +23,7 @@
   Commandline: --alter-algorithm=default
   Scope: Global, Session
   Dynamic: 'Yes'
-  Data Type: enumerated
+  Data Type: enum
   Default Value: DEFAULT
   Valid Values: DEFAULT, COPY, INPLACE, NOCOPY, INSTANT
   Introduced: MariaDB 10.3.7
@@ -70,7 +70,7 @@
   Scope: Global
   Dynamic: 'No'
   Type: number
-  Default Value: The lower of 900 and (50 + max_connections/5)
+  Default Value: 900
 - name: basedir
   Description: Path to the MariaDB installation directory. Other paths are usually
     resolved relative to this base directory.
@@ -109,16 +109,15 @@
   Commandline: --bind-address=addr
   Scope: Global
   Dynamic: 'No'
-  Data Type: string
-  Default Value: (Empty string)
-  Valid Values: Host name, IPv4, IPv6, ::, *
+  Default Value: ""
+  Valid Values: Hostname, IPv4, IPv6, ::, *
   Introduced: MariaDB 10.3.3 (as a system variable)
 - name: block_encryption_mode
   Description: Default block encryption mode for AES_ENCRYPT() and AES_DECRYPT() functions.
   Commandline: --block-encryption-mode=val
   Scope: Global, Session
   Dynamic: 'Yes'
-  Data Type: numeric
+  Data Type: enum
   Default Value: aes-128-ecb
   Valid values: aes-128-ecb, aes-192-ecb, aes-256-ecb, aes-128-cbc, aes-192-cbc, aes-256-cbc,
     aes-128-ctr, aes-192-ctr, aes-256-ctr
@@ -290,7 +289,7 @@
   Commandline: --completion-type=name
   Scope: Global, Session
   Dynamic: 'Yes'
-  Data Type: enumerated
+  Data Type: enum
   Default Value: NO_CHAIN
   Valid Values: 0, 1, 2, NO_CHAIN, CHAIN, RELEASE
 - name: concurrent_insert
@@ -306,7 +305,7 @@
   Commandline: --concurrent-insert[=value]
   Scope: Global
   Dynamic: 'Yes'
-  Data Type: enumerated
+  Data Type: enum
   Default Value: AUTO
   Valid Values: 0, 1, 2, AUTO, NEVER, ALWAYS
 - name: connect_timeout
@@ -395,8 +394,9 @@
   Commandline: --default-storage-engine=name
   Scope: Global, Session
   Dynamic: 'Yes'
-  Type: enumeration
+  Type: enum
   Default Value: InnoDB
+  Valid Values: InnoDB, Aria, MyISAM, XtraDB, Spider, ColumnStore, MERGE, TokuDB, MyRocks, Archive, CONNECT, CSV, FederatedX, SphinxSE, Mroonga, MEMORY, BLACKHOLE, OQGRAPH, S3 Storage Engine, Sequence
 - name: default_table_type
   Description: A synonym for default_storage_engine. Removed in MariaDB 5.5.
   Commandline: --default-table-type=name
@@ -415,7 +415,7 @@
   Commandline: --default-tmp-storage-engine=name
   Scope: Global, Session
   Dynamic: 'Yes'
-  Data Type: enumeration
+  Data Type: enum
   Default Value: 'NULL'
 - name: default_week_format
   Description: Default mode for the WEEK() function. See that page for details on
@@ -437,7 +437,7 @@
   Commandline: --delay-key-write[=name]
   Scope: Global
   Dynamic: 'Yes'
-  Data Type: enumeration
+  Data Type: enum
   Default Value: 'ON'
   Valid Values: ON, OFF, ALL
 - name: delayed_insert_limit
@@ -562,9 +562,9 @@
   Commandline: --event-scheduler[=value]
   Scope: Global
   Dynamic: 'Yes'
-  Data Type: enumeration
+  Data Type: enum
   Default Value: 'OFF'
-  Valid Values: ON (or 1), OFF (or 0), DISABLED
+  Valid Values: ON, OFF, DISABLED
 - name: expensive_subquery_limit
   Description: Number of rows to be examined for a query to be considered expensive,
     that is, maximum number of rows a subquery may examine in order to be executed
@@ -588,7 +588,7 @@
 
     No (<= MariaDB 10.8.3, MariaDB 10.7.4, MariaDB 10.6.8, MariaDB 10.5.16)'
   Data Type: boolean
-  Default Value: N (>= MariaDB 10.10), OFF (<= MariaDB 10.9)
+  Default Value: No
 - name: external_user
   Description: External user name set by the plugin used to authenticate the client.
     NULL if native MariaDB authentication is used.
@@ -720,11 +720,13 @@
     be set to YES, otherwise it will be NO. The COMPRESS() and UNCOMPRESS() functions
     will only be available if set to YES.
   Scope: Global
+  Data Type: boolean
   Dynamic: 'No'
 - name: have_crypt
   Description: If the crypt() system call is available this variable will be set to
     YES, otherwise it will be set to NO.  If set to NO, the ENCRYPT() function cannot
     be used.
+  Data Type: boolean
   Scope: Global
   Dynamic: 'No'
 - name: have_csv
@@ -737,11 +739,13 @@
 - name: have_dynamic_loading
   Description: 'If the server supports dynamic loading of plugins, will be set to
     YES, otherwise will be set to NO. '
+  Data Type: boolean
   Scope: Global
   Dynamic: 'No'
 - name: have_geometry
   Description: 'If the server supports spatial data types, will be set to YES, otherwise
     will be set to NO. '
+  Data Type: boolean
   Scope: Global
   Dynamic: 'No'
 - name: have_ndbcluster
@@ -759,16 +763,19 @@
 - name: have_profiling
   Description: If statement profiling is available, will be set to YES, otherwise
     will be set to NO.  See SHOW PROFILES() and SHOW PROFILE().
+  Data Type: boolean
   Scope: Global
   Dynamic: 'No'
 - name: have_query_cache
   Description: If the server supports the query cache, will be set to YES, otherwise
     will be set to NO.
+  Data Type: boolean
   Scope: Global
   Dynamic: 'No'
 - name: have_rtree_keys
   Description: If RTREE indexes (used for spatial indexes) are available, will be
     set to YES, otherwise will be set to NO.
+  Data Type: boolean
   Scope: Global
   Dynamic: 'No'
 - name: have_symlink
@@ -784,6 +791,7 @@
 
     Symbolic link support is required for the INDEX DIRECTORY and DATA DIRECTORY table
     options.'
+  Data Type: boolean
   Scope: Global
   Dynamic: 'No'
 - name: histogram_size
@@ -803,13 +811,11 @@
   Commandline: --histogram-type=value
   Scope: Global, Session
   Dynamic: 'Yes'
-  Data Type: enumeration
+  Data Type: enum
   Default Value: 'JSON_HB (>= MariaDB 11.0)
 
     DOUBLE_PREC_HB (<= MariaDB 10.11, >= MariaDB 10.4.3)'
-  Valid Values: 'SINGLE_PREC_HB, DOUBLE_PREC_HB (<= MariaDB 10.6)
-
-    SINGLE_PREC_HB, DOUBLE_PREC_HB, JSON_HB (>= MariaDB 10.7)'
+  Valid Values: SINGLE_PREC_HB, DOUBLE_PREC_HB, JSON_HB
 - name: host_cache_size
   Description: Number of host names that will be cached to avoid resolving. Setting
     to 0 disables the cache. Changing the value while the server is running causes
@@ -829,6 +835,9 @@
   Data Type: string
 - name: identity
   Description: A synonym for last_insert_id variable.
+  Scope: Session
+  Dynamic: 'Yes'
+  Data Type: numeric
 - name: idle_readonly_transaction_timeout
   Description: Time in seconds that the server waits for idle read-only transactions
     before killing the connection. If set to 0, the default, connections are never
@@ -924,7 +933,7 @@
   Dynamic: 'Yes'
   Data Type: numeric
   Default Value: '28800'
-  Range: '(Other): 1 to 31536000'
+  Range: 1 to 31536000
 - name: join_buffer_size
   Description: Minimum size in bytes of the buffer used for queries that cannot use
     an index, and instead perform a full table scan. Increase to get faster full joins
@@ -978,6 +987,7 @@
 - name: large_files_support
   Description: ON if the server if was compiled with large file support or not, else
     OFF
+  Data Type: boolean
   Scope: Global
   Dynamic: 'No'
 - name: large_page_size
@@ -1205,7 +1215,7 @@
   Commandline: log-slow-filter=value1[,value2...]
   Scope: Global, Session
   Dynamic: 'Yes'
-  Data Type: enumeration
+  Data Type: enum
   Default Value: admin, filesort, filesort_on_disk, filesort_priority_queue, full_join,
     full_scan, query_cache, query_cache_miss, tmp_table, tmp_table_on_disk
   Valid Values: admin, filesort, filesort_on_disk, filesort_priority_queue, full_join,
@@ -1230,7 +1240,7 @@
   Dynamic: 'Yes'
   Data Type: numeric
   Default Value: '0'
-  Range: 0-4294967295
+  Range: 0 to 4294967295
   Introduced: MariaDB 10.11
 - name: log_slow_queries
   Description: Deprecated and removed in MariaDB 10.0, use slow_query_log instead.
@@ -1310,15 +1320,9 @@
   Commandline: log-slow-verbosity=value1[,value2...]
   Scope: Global, Session
   Dynamic: 'Yes'
-  Data Type: enumeration
-  Default Value: (Empty)
-  Valid Values: '>= MariaDB 10.6.16, MariaDB 10.11.6: (Empty), query_plan, innodb,
-    explain, engine, warnings, all, full
-
-    >= MariaDB 10.6.15, MariaDB 10.11.5: (Empty), query_plan, innodb, explain, engine,
-    full
-
-    <= MariaDB 10.6.14, MariaDB 10.11.4: (Empty), query_plan, innodb, explain'
+  Data Type: enum
+  Default Value: ""
+  Valid Values: ", query_plan, innodb, explain, engine, warnings, all, full"
 - name: log_tc_size
   Description: Defines the size in bytes of the memory-mapped file-based transaction
     coordinator log, which is only used if the binary log is disabled. If you have
@@ -1465,6 +1469,8 @@
     This system variable''s value cannot be changed after the datadir has been initialized.
     lower_case_table_names is set when a MariaDB instance starts, and it remains constant
     afterwards.'
+  Data Type: enum
+  Valid Values: 0, 1, 2
 - name: max_allowed_packet
   Description: Maximum size in bytes of a packet or a generated/intermediate string.
     The packet message buffer is initialized with the value from net_buffer_length,
@@ -1555,6 +1561,12 @@
   'Range ': 16384 to 4294966272
 - name: max_insert_delayed_threads
   Description: Synonym for max_delayed_threads.
+  Commandline: --max-delayed-threads=#
+  Scope: Global, Session
+  Dynamic: 'Yes'
+  Data Type: numeric
+  Default Value: '20'
+  Range: 0 to 16384
 - name: max_join_size
   Description: Statements will not be performed if they are likely to need to examine
     more than this number of rows, row combinations or do more disk seeks. Can prevent
@@ -1624,7 +1636,7 @@
   Scope: Global, Session
   Dynamic: 'Yes'
   Data Type: numeric
-  Default Value: 1000  (>= MariaDB 10.6.0), 4294967295 (<= MariaDB 10.5)
+  Default Value: 1000
   Range: 0 to 4294967295
 - name: max_rowid_filter_size
   Description: The maximum size of the container of a rowid filter.
@@ -1665,8 +1677,7 @@
   Dynamic: 'Yes'
   Data Type: numeric
   Default Value: '1024'
-  Range: "4 to 8388608  (<= MariaDB 10.4.13, MariaDB 10.5.3) \n8 to 8388608  (>= \
-    \ MariaDB 10.4.14, MariaDB 10.5.4)"
+  Range: 8 to 8388608
 - name: max_sp_recursion_depth
   Description: Permitted number of recursive calls for a stored procedure. 0, the
     default, no recursion is permitted. Increasing this value increases the thread
@@ -1838,9 +1849,9 @@
   Commandline: note-verbosity=value1[,value2...]
   Scope: Global, Session
   Dynamic: 'Yes'
-  Data Type: enumeration
+  Data Type: set
   Default Value: basic,explain
-  Valid Values: basic,explain,unusable_keys or all.
+  Valid Values: basic, explain, unusable_keys, all.
   Introduced: MariaDB 10.6.16
 - name: old
   Description: Disabled by default, enabling it reverts index hints to those used
@@ -1860,7 +1871,7 @@
   Commandline: --old-alter-table
   Scope: Global, Session
   Dynamic: 'Yes'
-  Data Type: enumerated (>=MariaDB 10.3.7)
+  Data Type: enum
   Default Value: See alter_algorithm
   Valid Values: See alter_algorithm for the full list.
   Deprecated: MariaDB 10.3.7 (superceded by alter_algorithm)
@@ -1872,9 +1883,9 @@
   Commandline: --old-mode
   Scope: Global, Session
   Dynamic: 'Yes'
-  Data Type: string
+  Data Type: enum
   Default Value: UTF8_IS_UTF8MB3 (>= MariaDB 10.6) (empty string) (<= MariaDB 10.5)
-  Valid Values: See OLD Mode for the full list.
+  Valid Values: COMPAT_5_1_CHECKSUM, IGNORE_INDEX_ONLY_FOR_JOIN, LOCK_ALTER_TABLE_COPY, NO_DUP_KEY_WARNINGS_WITH_IGNORE, NO_NULL_COLLATION_IDS, NO_PROGRESS_INFO, OLD_FLUSH_STATUS, SESSION_USER_IS_USER, UTF8_IS_UTF8MB3, ZERO_DATE_TIME_CAST
 - name: old_passwords
   Description: If set to 1 (0 is default), MariaDB reverts to using the mysql_old_password
     authentication plugin by default for newly created users and passwords, instead
@@ -1900,7 +1911,6 @@
   Scope: Global
   Dynamic: 'No'
   Data Type: numeric
-  Default Value: Autosized (see description)
   Range: 0 to 4294967295
 - name: optimizer_extra_pruning_depth
   Description: f the optimizer needs to enumerate a join prefix of this size or larger,
@@ -1967,7 +1977,7 @@
   Scope: Global, Session
   Dynamic: 'Yes'
   Data Type: numeric
-  Default Value: 2 (>= MariaDB 10.10), 1 (<= MariaDB 10.9)
+  Default Value: 2
 - name: optimizer_search_depth
   Description: Maximum search depth by the query optimizer. Smaller values lead to
     less time spent on execution plans, but potentially less optimal results. If set
@@ -1996,7 +2006,7 @@
   Commandline: --optimizer-switch=value
   Scope: Global, Session
   Dynamic: 'Yes'
-  Data Type: string
+  Data Type: set
   Valid Values: "condition_pushdown_for_derived={on|off}\ncondition_pushdown_for_subquery={on|off}\n\
     condition_pushdown_from_having={on|off}\ncset_narrowing={on|off} - see Charset\
     \ Narrowing Optimization (>=  MariaDB 10.6.16, MariaDB 10.11.6, MariaDB 11.0.4,\
@@ -2035,7 +2045,7 @@
   Dynamic: 'Yes'
   Data Type: enum
   Default Value: enabled=off
-  Valid Values: enabled={on|off|default}
+  Valid Values: enabled=on, enabled=off, enabled=default
 - name: optimizer_trace_max_mem_size
   Description: Limits the memory used while tracing a query by specifying the maximum
     allowed cumulated size, in bytes, of stored optimizer traces.
@@ -2163,7 +2173,7 @@
   Description: For internal use by the server.
   Scope: Session
   Dynamic: 'Yes'
-  Data Type: numeric
+  Data Type: boolean
   Default Value: 'OFF'
 - name: pseudo_thread_id
   Description: For internal use only.
@@ -2202,6 +2212,8 @@
   Description: 'Size in bytes available to the query cache. About 40KB is needed for
     query cache structures, so setting a size lower than this will result in a warning.
     0, the default before MariaDB 10.1.7, effectively disables the query cache. '
+  Data Type: numeric
+  Default Value: 40960 (40KB)
 - name: query_cache_strip_comments
   Description: If set to 1 (0 is default), the server will strip any comments from
     the query before searching to see if it exists in the query cache.  Multiple space,
@@ -2217,6 +2229,8 @@
     SQL_NO_CACHE is specified. If set to 2 (or DEMAND), only queries with the SQL
     CACHE clause will be cached. Note that if the server is started with the query
     cache disabled, it cannot be enabled at runtime. '
+  Data Type: enum
+  Valid Values: 0, 1, 2
 - name: query_cache_wlock_invalidate
   Description: If set to 0, the default, results present in the query cache will be
     returned even if there's a write lock on the table. If set to 1, the client will
@@ -2247,10 +2261,13 @@
   Scope: Session
   Dynamic: 'Yes'
   Data Type: numeric
-  Default Value: Varies
   Range: 0 to 18446744073709551615
 - name: rand_seed2
   Description: 'See rand_seed1. '
+  Scope: Session
+  Dynamic: 'Yes'
+  Data Type: numeric
+  Range: 0 to 18446744073709551615
 - name: range_alloc_block_size
   Description: Size in bytes of blocks allocated during range optimization. The unit
     size in 1024.
@@ -2317,7 +2334,7 @@
   Scope: Global, Session
   Dynamic: 'Yes'
   Data Type: string
-  Default Value: Empty
+  Default Value: ""
   Introduced: MariaDB 11.3.0
 - name: require_secure_transport
   Description: When this option is enabled, connections attempted using insecure transport
@@ -2389,7 +2406,7 @@
   Commandline: None
   Scope: Global
   Dynamic: 'No'
-  Data Type: varchar
+  Data Type: string
   Default Value: None
   Introduced: MariaDB 10.5.26, MariaDB 10.6.19, MariaDB 10.11.9, MariaDB 11.1.6, MariaDB
     11.2.5, MariaDB 11.4.3, MariaDB 11.5.2, MariaDB 11.6.1
@@ -2433,11 +2450,6 @@
   Data Type: enum
   Default Value: 'OFF'
   Valid Values: OFF, STATE, CHARACTERISTICS
-- name: shared_memory
-  Description: Windows only, determines whether the server permits shared memory connections.
-    See also shared_memory_base_name.
-  Scope: Global
-  Dynamic: 'No'
 - name: shared_memory_base_name
   Description: Windows only, specifies the name of the shared memory to use for shared
     memory connection. Mainly used when running more than one instance on the same
@@ -2548,7 +2560,7 @@
   Scope: Global, Session
   Dynamic: 'Yes'
   Data Type: number
-  Default Value: 2M (2097152) (some distributions increase the default)
+  Default Value: 2097152 (2M) (some distributions increase the default)
 - name: sql_auto_is_null
   Description: If set to 1, the query SELECT * FROM table_name WHERE auto_increment_column
     IS NULL will return an auto-increment that has just been successfully inserted,
@@ -2631,9 +2643,9 @@
   Commandline: --sql-mode=value[,value[,value...]]
   Scope: Global, Session
   Dynamic: 'Yes'
-  Data Type: string
+  Data Type: set
   Default Value: STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
-  Valid Values: See SQL Mode for the full list.
+  Valid Values: ALLOW_INVALID_DATES, ANSI, ANSI_QUOTES, DB2, EMPTY_STRING_IS_NULL, ERROR_FOR_DIVISION_BY_ZERO, HIGH_NOT_PRECEDENCE, IGNORE_BAD_TABLE_OPTIONS, IGNORE_SPACE, MAXDB, MSSQL, MYSQL323, MYSQL40, NO_AUTO_CREATE_USER, NO_AUTO_VALUE_ON_ZERO, NO_BACKSLASH_ESCAPES, NO_DIR_IN_CREATE, NO_ENGINE_SUBSTITUTION, NO_FIELD_OPTIONS, NO_KEY_OPTIONS, NO_TABLE_OPTIONS, NO_UNSIGNED_SUBTRACTION, NO_ZERO_DATE, NO_ZERO_IN_DATE, ONLY_FULL_GROUP_BY, ORACLE, PAD_CHAR_TO_FULL_LENGTH, PIPES_AS_CONCAT, POSTGRESQL, REAL_AS_FLOAT, SIMULTANEOUS_ASSIGNMENT, STRICT_ALL_TABLES, STRICT_TRANS_TABLES, TIME_ROUND_FRACTIONAL, TRADITIONAL
 - name: sql_notes
   Description: If set to 1, the default, warning_count is incremented each time a
     Note warning is encountered. If set to 0, Note warnings are not recorded. mariadb-dump
@@ -2764,7 +2776,7 @@
   Dynamic: 'Yes'
   Data Type: numeric
   Default Value: '2000'
-  Range: 1 to 1048576 (1024K)
+  Range: 1 to 1048576
 - name: table_open_cache_instances
   Description: 'This system variable specifies the maximum number of table cache instances.
     MariaDB Server initially creates just a single instance. However, whenever it
@@ -2788,9 +2800,6 @@
   Data Type: numeric
   Default Value: 8 (>= MariaDB 10.2.2)
   Range: 1 to 64
-- name: table_type
-  Description: Removed and replaced by storage_engine. Use default_storage_engine
-    instead.
 - name: tcp_keepalive_interval
   Description: The interval, in seconds, between when successive keep-alive packets
     are sent if no acknowledgement is received. If set to 0, the system dependent
@@ -2913,6 +2922,9 @@
 - name: tmp_memory_table_size
   Description: An alias for tmp_table_size.
   Commandline: --tmp-memory-table-size=#
+  Data Type: numeric
+  Default Value: 16777216 (16MB)
+  Range: 0 to 4294967295
 - name: tmp_table_size
   Description: The largest size for temporary tables in memory (not MEMORY tables)
     although if max_heap_table_size is smaller the lower limit will apply. You can
@@ -2927,9 +2939,7 @@
   Dynamic: 'Yes'
   Data Type: numeric
   Default Value: 16777216 (16MB)
-  Range: '1024 to 4294967295 (< MariaDB 10.5)
-
-    0 to 4294967295 (>= MariaDB 10.5.0)'
+  Range: 0 to 4294967295
 - name: tmpdir
   Description: Directory for storing temporary tables and files. Can specify a list
     (separated by semicolons in Windows, and colons in Unix) that will then be used
@@ -2965,7 +2975,7 @@
   Commandline: --transaction-isolation=name
   Scope: Global, Session
   Dynamic: 'Yes'
-  Type: enumeration
+  Type: enum
   Default Value: REPEATABLE-READ
   Valid Values: READ-UNCOMMITTED, READ-COMMITTED, REPEATABLE-READ, SERIALIZABLE
   Introduced: MariaDB 11.1.1
@@ -3002,7 +3012,7 @@
   Commandline: --transaction-isolation=name
   Scope: Global, Session
   Dynamic: 'Yes'
-  Type: enumeration
+  Type: enum
   Default Value: REPEATABLE-READ
   Valid Values: READ-UNCOMMITTED, READ-COMMITTED, REPEATABLE-READ, SERIALIZABLE
   Deprecated: MariaDB 11.1
@@ -3100,7 +3110,7 @@
   Dynamic: 'Yes'
   Type: numeric
   Default Value: '28800'
-  Range: '(Other): 1 to 31536000'
+  Range: 1 to 31536000
 - name: warning_count
   Description: Read-only variable indicating the number of warnings, errors and notes
     resulting from the most recent statement that generated messages. See SHOW WARNINGS
